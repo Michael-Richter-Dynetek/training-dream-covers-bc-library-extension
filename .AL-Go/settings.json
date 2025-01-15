@@ -2,5 +2,13 @@
   "country": "us",
   "appFolders": [],
   "testFolders": [],
-  "bcptTestFolders": []
+  "bcptTestFolders": [],
+  "Environments": [
+    "PRODUCTION", 
+    "SANDBOX", 
+    "BCSandbox2", 
+    "Sandbox3"
+]
 }
+
+
