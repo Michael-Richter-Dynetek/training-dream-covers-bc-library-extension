@@ -1,4 +1,4 @@
-codeunit 50102 "Rent Book"
+codeunit 50102 "DC Rent Book"
 {
     /*trigger OnRun()
     begin
@@ -9,7 +9,7 @@ codeunit 50102 "Rent Book"
     /// RunRentBookCode.
     /// </summary>
     /// <param name="CurrentRecord">Record "Library Book List Table".</param>
-    procedure RunRentBookCode(CurrentRecord: Record "Library Book List Table");
+    procedure RunRentBookCode(CurrentRecord: Record "DC Library Book List Table");
     begin
         RentBook(CurrentRecord);
     end;
@@ -19,13 +19,13 @@ codeunit 50102 "Rent Book"
 
     end;
 
-    local procedure RentBook(CurrentRecord: Record "Library Book List Table");
+    local procedure RentBook(CurrentRecord: Record "DC Library Book List Table");
     var
         OldCustomerName: Text[100];
     begin
-        OldCustomerName := CurrentRecord."Customer Renting";
-        if Page.RunModal(Page::RentBook, CurrentRecord) = Action::LookupOK then begin
-            if (OldCustomerName = CurrentRecord."Customer Renting") and not ((OldCustomerName = '') or (OldCustomerName = 'None')) then
+        OldCustomerName := CurrentRecord."Customer Renting Name";
+        if Page.RunModal(Page::"DC Rent Book Page", CurrentRecord) = Action::LookupOK then begin
+            if (OldCustomerName = CurrentRecord."Customer Renting Name") and not ((OldCustomerName = '') or (OldCustomerName = 'None')) then
                 CurrentRecord."Rented Amount" += 1;
             CurrentRecord.Modify();
             CurrentRecord.Modify();

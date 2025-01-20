@@ -1,12 +1,12 @@
 /// <summary>
 /// This codeUnit will be used to to save the temporary book to the normal table
 /// </summary>
-codeunit 50101 "Save Temporary Book Record"
+codeunit 50101 "DC Save Temporary Book Record"
 {
 
-    procedure SaveTempBook(TempBook: Record "Library Book List Table" temporary);
+    procedure SaveTempBook(TempBook: Record "DC Library Book List Table" temporary);
     var
-        MainBookList: Record "Library Book List Table";
+        MainBookList: Record "DC Library Book List Table";
     begin
         MainBookList.Init();
         MainBookList := TempBook;

@@ -1,13 +1,13 @@
 /// <summary>
 /// This Page will be used to display a single book's details
 /// </summary>
-page 50101 "Book Details"
+page 50101 "DC Book Details"
 {
     Caption = 'Book Details';
     PageType = Card;
     ApplicationArea = All;
     UsageCategory = Documents;
-    SourceTable = "Library Book List Table";
+    SourceTable = "DC Library Book List Table";
 
 
 
@@ -47,10 +47,30 @@ page 50101 "Book Details"
                 field(Rented; Rec.Rented)
                 {
                     Caption = 'Rented';
+
+                    trigger OnValidate()
+                    begin
+                        if Rec.Rented = false then begin
+                            Rec."Customer Renting ID" := '';
+                            Rec."Customer Renting Name" := '';
+                            Rec.Modify();
+                        end;
+                    end;
                 }
-                field("Customer Renting"; Rec."Customer Renting")
+                field("Customer Renting"; Rec."Customer Renting Name")
                 {
                     Caption = 'Customer Renting Book';
+                    trigger OnAssistEdit();
+                    var
+                        Customer: Record Customer;
+                    begin
+                        if Page.RunModal(Page::"Customer List", Customer) = Action::LookupOK then begin
+                            Rec."Customer Renting ID" := Customer."No.";
+                            Rec."Customer Renting Name" := Customer.Name;
+                            Rec.Rented := true;
+                        end;
+
+                    end;
                 }
                 field("Rented Amount"; Rec."Rented Amount")
                 {
@@ -64,11 +84,11 @@ page 50101 "Book Details"
                 {
                     Caption = 'Series';
                 }
-                field(Prequel; Rec.PrequelName)
+                field(Prequel; Rec."Prequel Name")
                 {
                     Caption = 'Prequel';
                 }
-                field(Sequel; Rec.Sequel)
+                field(Sequel; Rec."Sequel Name")
                 {
                     Caption = 'Sequel';
                 }
@@ -88,7 +108,7 @@ page 50101 "Book Details"
                 {
                     Caption = 'Publication Date';
                 }
-                field(Pages; Rec.Pages)
+                field(Pages; Rec."Page Number")
                 {
                     Caption = 'Number';
                 }
@@ -118,14 +138,11 @@ page 50101 "Book Details"
 
                 trigger OnAction()
                 var
-                    displayBooks: Codeunit "Add Book Code";
+                    displayBooks: Codeunit "DC Add Book";
                 begin
                     displayBooks.AddExistingSeries(Rec);
                 end;
             }
         }
     }
-
-    var
-        IsEditing: Boolean;
 }

@@ -7,7 +7,7 @@ page 50102 "Add Book Page"
     PageType = Card;
     ApplicationArea = All;
     UsageCategory = Documents;
-    SourceTable = "Library Book List Table";
+    SourceTable = "DC Library Book List Table";
 
 
     layout
@@ -44,11 +44,11 @@ page 50102 "Add Book Page"
                 {
                     Caption = 'Series';
                 }
-                field(Prequel; Rec.PrequelName)
+                field(Prequel; Rec."Prequel Name")
                 {
                     Caption = 'Prequel';
                 }
-                field(Sequel; Rec.Sequel)
+                field(Sequel; Rec."Sequel Name")
                 {
                     Caption = 'Sequel';
                 }
@@ -69,7 +69,7 @@ page 50102 "Add Book Page"
                 {
                     Caption = 'Price';
                 }
-                field(Pages; Rec.Pages)
+                field(Pages; Rec."Page Number")
                 {
                     Caption = 'Number';
                 }

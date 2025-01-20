@@ -1,7 +1,7 @@
 /// <summary>
 /// This table will countain all the books in the library
 /// </summary>
-table 50100 "Library Book List Table"
+table 50100 "DC Library Book List Table"
 {
 
     DataClassification = CustomerContent;
@@ -15,81 +15,90 @@ table 50100 "Library Book List Table"
             AutoIncrement = true;
 
         }
-        field(2; Title; Text[100])
+        field(10; Title; Text[100])
         {
             Caption = 'Title';
             InitValue = 'None';
             //DataClassification = CustomerContent;
         }
-        field(3; Author; Text[100])
+        field(20; Author; Text[100])
         {
             Caption = 'Author';
             InitValue = 'None';
         }
-        field(4; Rented; Boolean)
+        field(30; Rented; Boolean)
         {
             Caption = 'Rented';
             InitValue = false;
         }
-        field(5; "Customer Renting"; Text[100])
+        field(39; "Customer Renting ID"; Code[20])
         {
-            Caption = 'Customer Renting Book';
-            InitValue = 'None';
+            Caption = 'Customer Renting ID';
+            TableRelation = Customer."No.";
         }
-        field(6; Series; Text[100])
+        field(40; "Customer Renting Name"; Text[100])
+        {
+            Caption = 'Customer Renting Name';
+            //InitValue = 'None';
+            FieldClass = FlowField;
+            CalcFormula = lookup(Customer.Name where("No." = field("Customer Renting ID")));
+
+            //ValidateTableRelation = true;
+        }
+        field(50; Series; Text[100])
         {
             Caption = 'Number';
             InitValue = 'None';
         }
-        field(7; Genre; Text[100])
+        field(60; Genre; Text[100])
         {
             Caption = 'Genre';
             InitValue = 'None';
         }
-        field(9; "Book Price"; Decimal)
+        field(70; "Book Price"; Decimal)
         {
             Caption = 'Price';
             InitValue = 0;
         }
-        field(8; Publisher; Text[100])
+        field(80; Publisher; Text[100])
         {
             Caption = 'Publisher';
             InitValue = 'None';
         }
-        field(10; "Publication Date"; Date)
+        field(90; "Publication Date"; Date)
         {
             Caption = 'Publication Date';
             //InitValue = Null;
         }
-        field(11; Pages; Integer)
+        field(100; "Page Number"; Integer)
         {
-            Caption = 'Number';
+            Caption = 'Pages';
             InitValue = 0;
         }
-        field(15; PrequelID; Integer)
+        field(110; "Prequel ID"; Integer)
         {
-            //Caption = 'Prequel';
-            TableRelation = "Library Book List Table"."Book Number";
+            Caption = 'Prequel ID';
+            TableRelation = "DC Library Book List Table"."Book Number";
             ValidateTableRelation = true;
         }
-        field(12; PrequelName; Text[100])
+        field(120; "Prequel Name"; Text[100])
         {
             Caption = 'Prequel';
-            InitValue = 'None';
-            //TableRelation = "Library Book List Table"."Book Number";
-            //ValidateTableRelation =true;
+            //FieldClass = FlowField;
+            //CalcFormula = lookup("DC Library Book List Table".Title where("Book Number" = field("Prequel ID")));
         }
-        field(16; SequelID; Integer)
+        field(130; "Sequel ID"; Integer)
         {
-            Caption = 'SequelID';
-            TableRelation = "Library Book List Table"."Book Number";
+            Caption = 'Sequel ID';
+            TableRelation = "DC Library Book List Table"."Book Number";
         }
-        field(13; Sequel; Text[100])
+        field(140; "Sequel Name"; Text[100])
         {
-            Caption = 'Sequel';
-            InitValue = 'None';
+            Caption = 'Sequel Name';
+            //FieldClass = FlowField;
+            //CalcFormula = lookup("DC Library Book List Table".Title where("Book Number" = field("Sequel ID")));
         }
-        field(14; "Rented Amount"; Integer)
+        field(150; "Rented Amount"; Integer)
         {
             Caption = 'Rented Amount';
             InitValue = 0;
@@ -107,10 +116,6 @@ table 50100 "Library Book List Table"
             Clustered = false;
         }
     }
-
-
-    var
-        myInt: Integer;
 
     trigger OnInsert()
     begin
@@ -141,27 +146,27 @@ table 50100 "Library Book List Table"
             Title := 'None';
         if Author = '' then
             Author := 'None';
-        if "Customer Renting" = '' then
-            "Customer Renting" := 'None';
+        if "Customer Renting Name" = '' then
+            "Customer Renting Name" := 'None';
         if Series = '' then
             Series := 'None';
         if Genre = '' then
             Genre := 'None';
         if Publisher = '' then
             Publisher := 'None';
-        if PrequelName = '' then
-            PrequelName := 'None';
-        if Sequel = '' then
-            Sequel := 'None';
+        if "Prequel Name" = '' then
+            "Prequel Name" := 'None';
+        if "Sequel Name" = '' then
+            "Sequel Name" := 'None';
     end;
 
     local procedure OnModifyRented();
     begin
-        if "Customer Renting" = '' then begin
-            "Customer Renting" := 'None';
+        if "Customer Renting Name" = '' then begin
+            "Customer Renting Name" := 'None';
         end;
 
-        if ("Customer Renting" = '') or ("Customer Renting" = 'None') then
+        if ("Customer Renting Name" = '') or ("Customer Renting Name" = 'None') then
             Rented := false
         else
             Rented := true;

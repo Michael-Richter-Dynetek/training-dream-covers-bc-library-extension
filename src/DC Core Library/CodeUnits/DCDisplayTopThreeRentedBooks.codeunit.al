@@ -1,6 +1,6 @@
-codeunit 50104 "Display Top Three Rented Books"
+codeunit 50104 "DC Top Three Rented Books"
 {
-    procedure DisplayBooks(LibraryBookList: Record "Library Book List Table");
+    procedure DisplayBooks(LibraryBookList: Record "DC Library Book List Table");
     var
         MessageText: Text[400];
         Counter: Integer;

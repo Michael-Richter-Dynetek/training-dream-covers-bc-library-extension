@@ -1,15 +1,15 @@
-page 50104 EnterSeries
+page 50104 "DC Enter Series"
 {
     PageType = Card;
     ApplicationArea = All;
     UsageCategory = Documents;
-    SourceTable = "Library Book List Table";
+    SourceTable = "DC Library Book List Table";
 
     layout
     {
         area(Content)
         {
-            group(GroupName)
+            group(SeriesInsert)
             {
                 Caption = 'Please Enter A Series Name';
                 field(Series; Rec.Series)
@@ -19,7 +19,4 @@ page 50104 EnterSeries
             }
         }
     }
-
-    var
-        myInt: Integer;
 }

@@ -1,6 +1,6 @@
-codeunit 50103 OnLibraryTableModify
+codeunit 50103 "DC On Library Table Modify"
 {
-    procedure RunOnLibraryTableModify(CurrentRecord: Record "Library Book List Table");
+    procedure RunOnLibraryTableModify(CurrentRecord: Record "DC Library Book List Table");
     var
     begin
         //run everything from here
@@ -8,9 +8,9 @@ codeunit 50103 OnLibraryTableModify
     end;
 
     //add methods that test if there is a name in the 
-    local procedure AssignRentedStatus(CurrentRecord: Record "Library Book List Table")
+    local procedure AssignRentedStatus(CurrentRecord: Record "DC Library Book List Table")
     begin
-        if (CurrentRecord."Customer Renting" = 'None') or (CurrentRecord."Customer Renting" = '') then begin
+        if (CurrentRecord."Customer Renting Name" = 'None') or (CurrentRecord."Customer Renting Name" = '') then begin
             CurrentRecord.Rented := false;
             //CurrentRecord."Customer Renting" := 'None';
             CurrentRecord.Modify();

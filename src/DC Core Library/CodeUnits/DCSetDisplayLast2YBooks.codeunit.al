@@ -1,7 +1,7 @@
-codeunit 50105 Set2YPublishFilter
+codeunit 50105 "DC Set 2Y Publish Filter"
 {
 
-    procedure Set2YFilter(var MainBookList: Record "Library Book List Table");
+    procedure Set2YFilter(var MainBookList: Record "DC Library Book List Table");
     var
         TwoYDate: Date;
     begin

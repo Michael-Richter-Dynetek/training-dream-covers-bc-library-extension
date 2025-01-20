@@ -1,7 +1,7 @@
 /// <summary>
 /// This codeunit will be used to navigate to a page and to 
 /// </summary>
-codeunit 50100 "Add Book Code"
+codeunit 50100 "DC Add Book"
 {
 
     trigger OnRun()
@@ -11,8 +11,8 @@ codeunit 50100 "Add Book Code"
 
     local procedure NavigateToAddBookPage();
     var
-        TempBookRecord: Record "Library Book List Table" temporary;
-        SaveBook: Codeunit "Save Temporary Book Record";
+        TempBookRecord: Record "DC Library Book List Table" temporary;
+        SaveBook: Codeunit "DC Save Temporary Book Record";
         AddBookPage: Page "Add Book Page";
     begin
         //TempBookRecord.Reset();
@@ -24,16 +24,16 @@ codeunit 50100 "Add Book Code"
         //Page.RunModal(Page::"Add Book Page", TempBookRecord);
     end;
 
-    procedure AddExistingSeries(CurrentRecord: Record "Library Book List Table");
+    procedure AddExistingSeries(CurrentRecord: Record "DC Library Book List Table");
     var
         ReadyToAddBook: Boolean;
         BookSeries: Text[100];
-        BookAuhtor: Text[100];
+        BookAuthor: Text[100];
         BookTitle: Text[100];
         BookSequel: Text[100];
         BookID: Integer;
-        TempRecord: Record "Library Book List Table" temporary;
-        BookDetailsPage: Page "Book Details";
+        TempRecord: Record "DC Library Book List Table" temporary;
+        BookDetailsPage: Page "DC Book Details";
     begin
         BookSequel := '';
         ReadyToAddBook := false;
@@ -41,10 +41,10 @@ codeunit 50100 "Add Book Code"
         BookTitle := CurrentRecord.Title;
         BookID := CurrentRecord."Book Number";
         BookSeries := CurrentRecord.Series;
-        BookAuhtor := CurrentRecord.Author;
+        BookAuthor := CurrentRecord.Author;
 
         If (BookSeries = '') or (BookSeries = 'None') then begin
-            if (Page.RunModal(Page::EnterSeries, CurrentRecord) = Action::LookupOK) and not ((CurrentRecord.Series = '') or (CurrentRecord.Series = 'None')) then begin
+            if (Page.RunModal(Page::"DC Enter Series", CurrentRecord) = Action::LookupOK) and not ((CurrentRecord.Series = '') or (CurrentRecord.Series = 'None')) then begin
                 ReadyToAddBook := true;
                 BookSeries := CurrentRecord.Series;
             end;
@@ -53,7 +53,7 @@ codeunit 50100 "Add Book Code"
             ReadyToAddBook := true;
 
         if (ReadyToAddBook = true) then begin
-            TempRecord := AddSequel(BookSeries, BookAuhtor, BookTitle);
+            TempRecord := AddSequel(BookSeries, BookAuthor, BookTitle);
             BookSequel := TempRecord.Title;
             //Message(BookSequel);
 
@@ -63,7 +63,7 @@ codeunit 50100 "Add Book Code"
             if BookSequel <> '' then begin
                 //Message(CurrentRecord.Title);
                 //Message(BookSequel);
-                CurrentRecord.Sequel := BookSequel;
+                CurrentRecord."Sequel Name" := BookSequel;
                 CurrentRecord.Modify();
 
                 //Message(CurrentRecord.Sequel);
@@ -80,18 +80,17 @@ codeunit 50100 "Add Book Code"
 
     end;
 
-    local procedure AddSequel(BookSeries: Text[100]; BookAuhtor: Text[100]; BookTitle: Text[100]): Record "Library Book List Table" temporary
+    local procedure AddSequel(BookSeries: Text[100]; BookAuthor: Text[100]; BookTitle: Text[100]): Record "DC Library Book List Table" temporary
     var
-        SequalInfo: array[2] of Text[100];
         SequelTitle: Text[100];
-        CurrentRecord: Record "Library Book List Table" temporary;
+        CurrentRecord: Record "DC Library Book List Table" temporary;
     begin
         SequelTitle := '';
 
         CurrentRecord.Init();
         CurrentRecord.Series := BookSeries;
-        CurrentRecord.Author := BookAuhtor;
-        CurrentRecord.PrequelName := BookTitle;
+        CurrentRecord.Author := BookAuthor;
+        CurrentRecord."Prequel Name" := BookTitle;
         CurrentRecord.Insert(true);
 
 

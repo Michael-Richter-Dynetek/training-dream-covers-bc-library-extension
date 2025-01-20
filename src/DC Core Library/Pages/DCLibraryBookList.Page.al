@@ -1,13 +1,13 @@
 /// <summary>
 /// This page will display aal the Books in the library
 /// </summary>
-page 50100 "Library Book list Page"
+page 50100 "DC Library Book list Page"
 {
     Caption = 'Library Book List';
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Documents;
-    SourceTable = "Library Book List Table";
+    SourceTable = "DC Library Book List Table";
     CardPageId = 50101;
 
 
@@ -34,7 +34,7 @@ page 50100 "Library Book list Page"
                 {
                     Caption = 'Rented';
                 }
-                field("Customer Renting"; Rec."Customer Renting")
+                field("Customer Renting"; Rec."Customer Renting Name")
                 {
                     Caption = 'Customer Renting Book';
                     Visible = false;
@@ -61,17 +61,17 @@ page 50100 "Library Book list Page"
                     Caption = 'Publication Date';
                     Visible = false;
                 }
-                field(Pages; Rec.Pages)
+                field(Pages; Rec."Page Number")
                 {
                     Caption = 'Number';
                     Visible = false;
                 }
-                field(Prequel; Rec.PrequelName)
+                field(Prequel; Rec."Prequel Name")
                 {
                     Caption = 'Prequel';
                     Visible = true;
                 }
-                field(Sequel; Rec.Sequel)
+                field(Sequel; Rec."Sequel Name")
                 {
                     Caption = 'Sequel';
                     Visible = true;
@@ -106,7 +106,7 @@ page 50100 "Library Book list Page"
 
                 trigger OnAction()
                 var
-                    DisplayTopRented: Codeunit "Display Top Three Rented Books";
+                    DisplayTopRented: Codeunit "DC Top Three Rented Books";
                 begin
                     //run codeunit to sort list according to rented then take 3 and display as message
                     DisplayTopRented.DisplayBooks(xRec);
@@ -122,7 +122,7 @@ page 50100 "Library Book list Page"
 
                 trigger OnAction()
                 var
-                    AddBookCode: Codeunit "Add Book Code";
+                    AddBookCode: Codeunit "DC Add Book";
                 begin
                     AddBookCode.Run();
 
@@ -134,7 +134,7 @@ page 50100 "Library Book list Page"
 
                 trigger OnAction()
                 var
-                    RentBook: Codeunit "Rent Book";
+                    RentBook: Codeunit "DC Rent Book";
                 begin
                     RentBook.RunRentBookCode(Rec);
                 end;
@@ -145,7 +145,7 @@ page 50100 "Library Book list Page"
 
                 trigger OnAction()
                 var
-                    SetDateFilter: Codeunit Set2YPublishFilter;
+                    SetDateFilter: Codeunit "DC Set 2Y Publish Filter";
                 begin
                     SetDateFilter.Set2YFilter(Rec);
                 end;
