@@ -1,0 +1,37 @@
+{
+  "id": "aef28f28-2430-4305-b4b2-194fc0ef4861",
+  "name": "DC-Library-Renting-Ext",
+  "publisher": "Default Publisher",
+  "version": "1.0.0.0",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [{
+    "id": "5ad2a4c4-1101-44fc-b9cc-f9b48e2ee5e7",
+    "name": "DC-Library-Extension",
+    "publisher": "Default Publisher",
+    "version": "1.0.0.0"
+  }],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "25.0.0.0",
+  "idRanges": [
+    {
+      "from": 50200,
+      "to": 50249
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "14.0",
+  "features": [
+    "NoImplicitWith"
+  ]
+}
