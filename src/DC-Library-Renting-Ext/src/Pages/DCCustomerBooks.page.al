@@ -4,6 +4,7 @@ page 50202 "DC Customer Books Page"
     ApplicationArea = All;
     UsageCategory = Administration;
     SourceTable = "DC Library Book List Table";
+    Editable = false;
     
 
     layout
@@ -53,21 +54,4 @@ page 50202 "DC Customer Books Page"
         }
     }
 
-    actions
-    {
-        area(Processing)
-        {
-            action(ActionName)
-            {
-
-                trigger OnAction()
-                begin
-
-                end;
-            }
-        }
-    }
-
-    var
-        myInt: Integer;
 }

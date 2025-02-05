@@ -40,8 +40,11 @@ page 50201 "DC Customers Overdue Page"
                 ApplicationArea = ALL;
 
                 trigger OnAction()
+                var
+                    DCLibraryBookListTable: Record "DC Library Book List Table";
                 begin
-                    
+                    DCLibraryBookListTable.SetFilter("Customer Renting Name", Rec.Name);
+                    Page.RunModal(Page::"DC Customer Books Page", DCLibraryBookListTable);
                 end;
             }
         }

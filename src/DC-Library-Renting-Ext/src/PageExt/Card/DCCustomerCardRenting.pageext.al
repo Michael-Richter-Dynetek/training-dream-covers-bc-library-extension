@@ -21,6 +21,28 @@ pageextension 50202 "DC Customer Card Renting Ext" extends "Customer Card"
         }
     }
 
+    actions
+    {
+        addbefore(WordTemplate)
+        {
+            action(ViewBooks)
+            {
+                Caption = 'View Rented Book';
+                Image = CopyDepreciationBook;
+                ToolTip = 'These are all the books related to the current customer.';
+                ApplicationArea = ALL;
+
+                trigger OnAction()
+                var
+                    DCLibraryBookListTable: Record "DC Library Book List Table";
+                begin
+                    DCLibraryBookListTable.SetFilter("Customer Renting Name", Rec.Name);
+                    Page.RunModal(Page::"DC Customer Books Page", DCLibraryBookListTable);
+                end;
+            }
+        }
+    }
+
     // reset books amount
     /*trigger OnOpenPage()
     begin
