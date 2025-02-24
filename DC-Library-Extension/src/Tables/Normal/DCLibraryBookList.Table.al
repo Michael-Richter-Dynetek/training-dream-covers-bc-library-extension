@@ -78,6 +78,10 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
             //FieldClass = FlowField;
             //CalcFormula = lookup("DC Library Book List Table".Title where("Book Number" = field("Sequel ID")));
         }
+        field(250; "Date Added"; Date)
+        {
+            Caption = 'Date Added';
+        }
 
     }
 

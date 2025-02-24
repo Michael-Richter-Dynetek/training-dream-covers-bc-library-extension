@@ -166,5 +166,23 @@ page 50100 "DC Library Book list Page"
         }
     }
 
+    /*trigger OnOpenPage()
+    var
+        string: Text;
+        value1: Integer;
+        value2: Text;
+        value3: Text;
+        FullString: Text;
+    begin
+        string := '^XA^MMT^PW557^LL0253^LS0^FO8,8^GB543,240,3^FS^FO176,8^GB376,240,3^FS^BY3,3,50^FT24,170^BXN,10,200,0,0,1,~^FH\^FD%1^FS^FT40,220^A0N,20,19^FH\^FD%1^FS^FT352,220^A0N,20,19^FH\^FD%2^FS^FT192,170^A0N,25,26^FB346,6,0,C^FH\^FD%3^FS^PQ%4,0,1,Y^XZ';
+        value1 := 222222222;
+        value2 := 'Please Greeeeeeeeeeeeeeeeeeeg NNNNNNNNNNNNNNNNNNNNNNNNNNNNN';
+        value3 := 'SFDhsdffffffffffffffffdddsssssssssssssssssssssssssssss';
+        FullString := StrSubstNo(string, value1, value2, value3);
+        Message(FullString);
+
+
+    end;*/
+
 
 }

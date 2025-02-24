@@ -14,6 +14,12 @@ codeunit 50200 "DC Manage Rent Book Code"
     end;
 
 
+    [IntegrationEvent(false, false)]
+    local procedure OnRentBookEvent(DCLibraryBookListTable: Record "DC Library Book List Table"; IsHandled: Boolean)
+    begin
+    end;
+
+
 
 
 
@@ -51,13 +57,24 @@ codeunit 50200 "DC Manage Rent Book Code"
     // This function functions
     local procedure RentBook(DCLibraryBookListTable: Record "DC Library Book List Table");
     var
+
         Customer: Record Customer;
         OldCustomerID: Text[100];
         AllowedToRent: Boolean;
+        //BookNumber: Code[20];
         CustomerRentedBook: Label 'The customer "%1" is now renting the book "%2"';
+        BookAlreadyRentedError: Label 'This book is already being rented.';
     begin
         AllowedToRent := true;
         OldCustomerID := DCLibraryBookListTable."Customer Renting ID";
+
+        if DCLibraryBookListTable."Customer Renting ID" <> '' then begin
+            Error(BookAlreadyRentedError);
+            exit;
+        end;
+
+        //BookNumber := DCLibraryBookListTable."Book Number";
+
         if Page.RunModal(Page::"DC Rent Book Page", DCLibraryBookListTable) = Action::LookupOK then begin
             if (OldCustomerID <> DCLibraryBookListTable."Customer Renting ID") and (DCLibraryBookListTable."Customer Renting ID" <> '') then begin
                 DCLibraryBookListTable."Rented Amount" += 1;
@@ -69,9 +86,12 @@ codeunit 50200 "DC Manage Rent Book Code"
                 Customer."Books Rented" += 1;
                 Customer.Modify(true);
                 Message(CustomerRentedBook, Customer.Name, DCLibraryBookListTable.Title);
+                DCLibraryBookListTable.Modify();
+                //DCLibraryBookListTable.Get(DCLibraryBookListTable."Book Number");
+                OnRentBookEvent(DCLibraryBookListTable, false);
             end;
 
-            DCLibraryBookListTable.Modify();
+
         end;
 
     end;
@@ -99,12 +119,19 @@ codeunit 50200 "DC Manage Rent Book Code"
     var
         Customer: Record Customer;
         CustomerID: Code[20];
+        BookNotRentedError: Label 'You cant return a book that is not being rented';
     begin
         if IsHandled then
             exit;
+        if DCLibraryBookListTable."Customer Renting ID" = '' then begin
+            Error(BookNotRentedError);
+            exit;
+        end;
 
         if Confirm(ReturnBookConfirm, false, DCLibraryBookListTable.Title) then begin
             //library section
+            OnReturnBookEvent(DCLibraryBookListTable, false);
+
             CustomerID := DCLibraryBookListTable."Customer Renting ID"; // this is necessary
             DCLibraryBookListTable.Validate("Customer Renting ID", '');
             //DCLibraryBookListTable.Validate("Customer Renting Name", '');

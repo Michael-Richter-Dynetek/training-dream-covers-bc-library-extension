@@ -1,5 +1,6 @@
 pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
 {
+
     layout
     {
         addafter(Author)
@@ -49,6 +50,15 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                 ApplicationArea = All;
                 ToolTip = 'This is the Amount of times customers have Rented the current book.';
             }
+            field("Book Ranking"; Rec."Book Ranking")
+            {
+                Caption = 'Book Monthly Ranking';
+                ApplicationArea = All;
+                ToolTip = 'This displays the book''s rented amount for a months period.';
+                Visible = true;
+
+            }
+
         }
     }
 
@@ -109,6 +119,18 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                     CurrPage.Update(true);
                 end;
             }
+            action("Rent/Return Log")
+            {
+                Caption = 'Rent and Return Log';
+                ApplicationArea = All;
+                ToolTip = 'This is the Log that contains all the book Rented and Returned.';
+                Image = Log;
+
+                trigger OnAction()
+                begin
+                    Page.Run(Page::"DC Rent Return Log Page");
+                end;
+            }
 
             action(OverdueRentingCustomers)
             {
@@ -127,6 +149,7 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
             {
                 Caption = 'Load Status';
                 Image = Action;
+                ToolTip = 'This will load Status';
 
                 trigger OnAction()
                 var
@@ -137,20 +160,32 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                     DCEndProbation.Run();
                 end;
             }
+            action(RefreshRanking)
+            {
+                Caption = 'Refresh Ranking';
+                Image = RefreshRegister;
+                ToolTip = 'This will reset the book ranking and recalculate it';
+
+                trigger OnAction()
+                var
+                    DCAssignRanking: Codeunit "DC Assign Ranking Code";
+                begin
+                    DCAssignRanking.Run();
+                    CurrPage.Update();
+                end;
+            }
         }
+
+
+
+
     }
 
     trigger OnOpenPage()
     var
-        DCAssignStatusCode: Codeunit "DC Update Book Status";
-        DCEndProbation: Codeunit "DC Update Customer Status";
     begin
-        if RunOnce = false then begin
-            RunOnce := true;
-            DCAssignStatusCode.UpdateBookStatus();
-            DCEndProbation.Run();
-        end;
-
+        Rec.SetCurrentKey("Book Ranking");
+        CurrPage.Update();
     end;
 
     var

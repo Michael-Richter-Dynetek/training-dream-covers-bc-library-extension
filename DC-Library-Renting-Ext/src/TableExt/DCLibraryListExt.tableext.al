@@ -62,13 +62,22 @@ tableextension 50200 "DC Library List Ext." extends "DC Library Book List Table"
 
 
         }
+        field(200; "Amount Rented Month"; Integer)
+        {
+            Caption = 'Books Rented in this month';
+        }
+        field(210; "Book Ranking"; Integer)
+        {
+            Caption = 'Book Ranking';
+        }
+
     }
 
     trigger OnBeforeModify()
     begin
-        /*if ("Customer Renting ID" = '') then
+        if ("Customer Renting ID" = '') then
             Rented := false
         else
-            Rented := true;*/
+            Rented := true;
     end;
 }
