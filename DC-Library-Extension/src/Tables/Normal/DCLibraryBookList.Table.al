@@ -87,10 +87,12 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
 
     keys
     {
-        /*key(PK; "Book Number")
+        key(PK; "Book Number")
         {
             Clustered = true;
         }
+        
+        /*
         key(SecondaryKey; Title)
         {
             Clustered = false;

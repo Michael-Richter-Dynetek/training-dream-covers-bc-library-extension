@@ -85,8 +85,10 @@ codeunit 50100 "DC Manage Books Code"
 
                 System.Clear(DCLibraryBookListTable);
                 DCLibraryBookListTable.Init();
+                TempRecord.Validate("Date Added", WorkDate());
+                TempRecord.Modify();
                 DCLibraryBookListTable := TempRecord;
-                DCLibraryBookListTable.Insert();
+                DCLibraryBookListTable.Insert(true);
 
             end;
 

@@ -71,7 +71,15 @@ tableextension 50200 "DC Library List Ext." extends "DC Library Book List Table"
             Caption = 'Book Ranking';
         }
 
+
+
     }
+
+    keys
+    {
+        key(SecondaryKey; "Amount Rented Month") { }
+    }
+
 
     trigger OnBeforeModify()
     begin

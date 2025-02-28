@@ -90,6 +90,12 @@ page 50100 "DC Library Book list Page"
                     Visible = false;
                     ToolTip = 'This is the Sequel of the Book.';
                 }
+                field("Date Added"; Rec."Date Added")
+                {
+                    Caption = 'Date Added';
+                    ApplicationArea = All;
+
+                }
 
 
 

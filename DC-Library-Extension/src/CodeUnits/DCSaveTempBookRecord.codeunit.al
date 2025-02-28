@@ -14,6 +14,8 @@ codeunit 50101 "DC Save Temporary Book Record"
         MainBookList: Record "DC Library Book List Table";
     begin
         MainBookList.Init();
+        TempDCLibraryBookListTable.Validate("Date Added", WorkDate());
+        //TempDCLibraryBookListTable.Modify();
         MainBookList := TempDCLibraryBookListTable;
         MainBookList.Insert(true);
     end;
