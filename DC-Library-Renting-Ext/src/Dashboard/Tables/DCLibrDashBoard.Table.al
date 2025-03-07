@@ -33,7 +33,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 Rented = const(false),
-                Author = field("Author Filter"),
+                "Author Name" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -45,7 +45,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 Rented = const(true),
-                Author = field("Author Filter"),
+                "Author Name" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -57,7 +57,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::Mild),
-                Author = field("Author Filter"),
+                "Author Name" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -69,7 +69,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::Medium),
-                Author = field("Author Filter"),
+                "Author Name" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -81,7 +81,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::High),
-                Author = field("Author Filter"),
+                "Author Name" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -93,7 +93,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::Extreme),
-                Author = field("Author Filter"),
+                "Author Name" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));

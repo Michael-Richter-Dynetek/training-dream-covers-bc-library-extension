@@ -3,7 +3,7 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
 
     layout
     {
-        addafter(Author)
+        addlast("Library Books")
         {
 
             field(Rented; Rec.Rented)

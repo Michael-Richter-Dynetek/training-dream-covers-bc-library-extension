@@ -5,7 +5,7 @@ page 50202 "DC Customer Books Page"
     UsageCategory = Administration;
     SourceTable = "DC Library Book List Table";
     Editable = false;
-    
+
 
     layout
     {
@@ -21,13 +21,15 @@ page 50202 "DC Customer Books Page"
             }
             repeater(Books)
             {
-                field(Title;Rec.Title){
+                field(Title; Rec.Title)
+                {
                     Caption = 'Title';
                     ApplicationArea = All;
                 }
-                field(Author;Rec.Author){
+                field(Author; Rec."Author Name")
+                {
                     Caption = 'Author';
-                    ApplicationArea =All;
+                    ApplicationArea = All;
                 }
 
                 field(Rented; Rec.Rented)

@@ -9,7 +9,9 @@ pageextension 50250 "DC Library RC Ext." extends "DC Library Role Center"
                 Caption = 'Add Online Book';
                 ToolTip = 'This display a list of books where you can search for a book to add to this library';
                 ApplicationArea = All;
-                // RunObject =;
+
+                RunObject = codeunit "DC Library Online Books C";
+
             }
         }
     }

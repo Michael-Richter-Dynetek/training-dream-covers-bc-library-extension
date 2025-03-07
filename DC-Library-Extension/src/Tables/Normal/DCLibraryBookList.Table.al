@@ -20,9 +20,16 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
             Caption = 'Title';
             //DataClassification = CustomerContent;
         }
-        field(20; Author; Text[100])
+        field(19; "Author ID"; Code[20])
+        {
+            Caption = 'Author ID';
+            TableRelation = "DC Author";
+        }
+        field(20; "Author Name"; Text[100])
         {
             Caption = 'Author';
+            FieldClass = FlowField;
+            CalcFormula = lookup("DC Library Book List Table"."Author Name" where("Author ID" = field("Author ID")));
         }
         field(50; Series; Text[100])
         {
@@ -82,6 +89,10 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         {
             Caption = 'Date Added';
         }
+        field(50100; Description; Text[1024])
+        {
+            Caption = 'Description';
+        }
 
     }
 
@@ -91,12 +102,6 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         {
             Clustered = true;
         }
-        
-        /*
-        key(SecondaryKey; Title)
-        {
-            Clustered = false;
-        }*/ //wrong placement and feature might no longer be neccessary.
     }
 
     trigger OnInsert()
@@ -104,11 +109,8 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         NoSeries: Codeunit "No. Series";
         SeriesCode: Code[20];
     begin
-        //SeriesCode := 'B-ID';
-        //NoSeries.Get(SeriesCode);
         SeriesCode := NoSeries.GetNextNo('B-ID', WorkDate());
         Rec.Validate("Book Number", SeriesCode);
-
     end;
 
     trigger OnModify()

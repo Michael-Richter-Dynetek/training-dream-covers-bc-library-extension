@@ -35,12 +35,23 @@ page 50101 "DC Book Details"
                     ToolTip = 'This is the book Title.';
                     Editable = true;
                 }
-                field(Author; Rec.Author)
+                field(Author; Rec."Author Name")
                 {
                     Caption = 'Author';
                     ApplicationArea = All;
                     ToolTip = 'This is the book Author.';
                     Editable = true;
+
+                    trigger OnAssistEdit()
+                    var
+                        DCAuthor: Record "DC Author";
+                    begin
+                        if Page.RunModal(Page::"DC Author List", DCAuthor) = Action::LookupOK then begin
+                            Rec.Validate("Author ID", DCAuthor."Author ID");
+                            Rec.Validate("Author Name", DCAuthor."Author Name");
+                            Rec.Modify();
+                        end;
+                    end;
 
                 }
             }

@@ -31,12 +31,12 @@ page 50100 "DC Library Book list Page"
                     ApplicationArea = All;
                     ToolTip = 'This is the Title of the Book.';
                 }
-                field(Author; Rec.Author)
-                {
-                    Caption = 'Author';
-                    ApplicationArea = All;
-                    ToolTip = 'This is the Author of the Book.';
-                }
+                // field(Author; Rec."Author Name")
+                // {
+                //     Caption = 'Author';
+                //     ApplicationArea = All;
+                //     ToolTip = 'This is the Author of the Book.';
+                // }
                 field(Series; Rec.Series)
                 {
                     Caption = 'Series';
@@ -167,6 +167,40 @@ page 50100 "DC Library Book list Page"
                 begin
                     if Page.RunModal(Page::"DC General Setup Page") = Action::LookupOK then begin
                     end;
+                end;
+            }
+            action(AddAuthor)
+            {
+                Caption = 'Add Author';
+                ApplicationArea = All;
+                Image = AddContacts;
+                ToolTip = 'Add a Author to the list of authors';
+
+                trigger OnAction()
+                var
+                    DCAuthorTemp: Record "DC Author" temporary;
+                    DCAuthor: Record "DC Author";
+                    AuthorAddedMessage: Label 'The Author "%1" has been added to the library';
+                begin
+                    DCAuthorTemp.Insert();
+                    if Page.RunModal(Page::"DC Add Author", DCAuthorTemp) = Action::LookupOK then begin
+                        DCAuthor.Init();
+                        DCAuthor := DCAuthorTemp;
+                        DCAuthor.Insert(true);
+                        Message(AuthorAddedMessage, DCAuthor."Author Name");
+                    end;
+                end;
+            }
+            action(ViewAuthors)
+            {
+                Caption = 'View Authors';
+                ToolTip = 'View All Authors currently in the Library.';
+                ApplicationArea = All;
+                Image = ContactPerson;
+
+                trigger OnAction()
+                begin
+                    if Page.RunModal(Page::"DC Author List") = Action::LookupOK then;
                 end;
             }
         }

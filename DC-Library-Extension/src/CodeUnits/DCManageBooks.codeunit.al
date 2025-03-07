@@ -108,7 +108,7 @@ codeunit 50100 "DC Manage Books Code"
 
         CurrentRecord.Init();
         CurrentRecord.Validate(Series, DCLibraryBookListTable.Series);
-        CurrentRecord.Validate(Author, DCLibraryBookListTable.Author);
+        CurrentRecord.Validate("Author Name", DCLibraryBookListTable."Author Name");
         CurrentRecord.Validate("Prequel Name", DCLibraryBookListTable."Prequel Name");
         CurrentRecord.Validate(Publisher, DCLibraryBookListTable.Publisher);
         CurrentRecord.Validate(Genre, DCLibraryBookListTable.Genre);

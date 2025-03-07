@@ -29,12 +29,23 @@ page 50102 "Add Book Page"
                     ApplicationArea = All;
                     ToolTip = 'Enter the Title of the book.';
                 }
-                field(Author; Rec.Author)
+                field(Author; Rec."Author Name")
                 {
                     Caption = 'Author';
-                    Editable = true;
+                    //Editable = true;
                     ApplicationArea = All;
                     ToolTip = 'Enter the Author of the book.';
+
+                    trigger OnAssistEdit()
+                    var
+                        DCAuthor: Record "DC Author";
+                    begin
+                        if Page.RunModal(Page::"DC Author List", DCAuthor) = Action::LookupOK then begin
+                            Rec.Validate("Author ID", DCAuthor."Author ID");
+                            Rec.Validate("Author Name", DCAuthor."Author Name");
+                            Rec.Modify();
+                        end;
+                    end;
                 }
                 field(Genre; Rec.Genre)
                 {
