@@ -10,7 +10,7 @@ codeunit 50151 "DC Find Related Genre Code"
     /// </summary>
     /// <param name="MiscTextFilter">Text[100].</param>
     /// <returns>Return value of type Text.</returns>
-    procedure GetGenreFilterText(MiscTextFilter: Text[100]): Text
+    /*procedure GetGenreFilterText(MiscTextFilter: Text[100]): Text
     var
         FirstRecordFound: Boolean;
         BookGenreEnum: Enum "DC Book Genre Enum";
@@ -41,5 +41,5 @@ codeunit 50151 "DC Find Related Genre Code"
             GenreFilterText := '';
         exit(GenreFilterText);
 
-    end;
+    end;*/
 }

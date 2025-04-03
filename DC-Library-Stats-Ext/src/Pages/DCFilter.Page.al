@@ -152,11 +152,11 @@ page 50150 "DC Filter Page"
                     Caption = 'Title';
                     ApplicationArea = All;
                 }
-                field(Author; Rec.Author)
+                /*field(Author; Rec.Author)
                 {
                     Caption = 'Author';
                     ApplicationArea = All;
-                }
+                }*/
                 field(Rented; Rec.Rented)
                 {
                     Caption = 'Rented';

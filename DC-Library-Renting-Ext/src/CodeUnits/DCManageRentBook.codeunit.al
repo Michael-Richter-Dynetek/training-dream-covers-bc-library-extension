@@ -9,13 +9,13 @@ codeunit 50200 "DC Manage Rent Book Code"
 
 
     [IntegrationEvent(false, false)]
-    local procedure OnReturnBookEvent(DCLibraryBookListTable: Record "DC Library Book List Table"; IsHandled: Boolean)
+    local procedure OnReturnBookEvent(var DCLibraryBookListTable: Record "DC Library Book List Table"; IsHandled: Boolean)
     begin
     end;
 
 
     [IntegrationEvent(false, false)]
-    local procedure OnRentBookEvent(DCLibraryBookListTable: Record "DC Library Book List Table"; IsHandled: Boolean)
+    local procedure OnRentBookEvent(var DCLibraryBookListTable: Record "DC Library Book List Table"; IsHandled: Boolean)
     begin
     end;
 
@@ -31,9 +31,8 @@ codeunit 50200 "DC Manage Rent Book Code"
 
 
 
-    var
-        ReturnBookConfirm: label 'Are you sure you would like to return "%1"';
-        BookReturnMessage: Label 'The Book "%1" has been returned';
+    //var
+
 
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -59,14 +58,13 @@ codeunit 50200 "DC Manage Rent Book Code"
     var
 
         Customer: Record Customer;
-        OldCustomerID: Text[100];
+        OldCustomerID: Text;
         AllowedToRent: Boolean;
         //BookNumber: Code[20];
         CustomerRentedBook: Label 'The customer "%1" is now renting the book "%2"';
         BookAlreadyRentedError: Label 'This book is already being rented.';
     begin
         AllowedToRent := true;
-        OldCustomerID := DCLibraryBookListTable."Customer Renting ID";
 
         if DCLibraryBookListTable."Customer Renting ID" <> '' then begin
             Error(BookAlreadyRentedError);
@@ -76,18 +74,18 @@ codeunit 50200 "DC Manage Rent Book Code"
         //BookNumber := DCLibraryBookListTable."Book Number";
 
         if Page.RunModal(Page::"DC Rent Book Page", DCLibraryBookListTable) = Action::LookupOK then begin
-            if (OldCustomerID <> DCLibraryBookListTable."Customer Renting ID") and (DCLibraryBookListTable."Customer Renting ID" <> '') then begin
+            if (DCLibraryBookListTable."Customer Renting ID" <> '') then begin
                 DCLibraryBookListTable."Rented Amount" += 1;
                 DCLibraryBookListTable.Validate("Date Rented", Today);
                 DCLibraryBookListTable.Validate("Date Returned", 0D);
                 DCLibraryBookListTable.Validate("Renting Status", Enum::"DC Book Renting Status"::" ");
-
+                DCLibraryBookListTable."Customer Renting Name" := Customer.Name;
                 Customer.Get(DCLibraryBookListTable."Customer Renting ID");
                 Customer."Books Rented" += 1;
                 Customer.Modify(true);
                 Message(CustomerRentedBook, Customer.Name, DCLibraryBookListTable.Title);
                 DCLibraryBookListTable.Modify();
-                //DCLibraryBookListTable.Get(DCLibraryBookListTable."Book Number");
+
                 OnRentBookEvent(DCLibraryBookListTable, false);
             end;
 
@@ -96,6 +94,74 @@ codeunit 50200 "DC Manage Rent Book Code"
 
     end;
 
+
+    procedure RentMulitpleBooks(var DCLibraryBookListTable: Record "DC Library Book List Table");
+    var
+        Customer: Record Customer;
+        InvalidBookList: List of [Text];
+        CustomerRentedBook: Label 'The customer "%1" is now renting multiple book';
+        BooksAlreadyRentedError: Label 'The book/s "%1" have already been rented.';
+        RentableBooks: Boolean;
+        FirstInstance: Boolean;
+        DisplayInvalidBooks, InvalidBook : Text;
+    begin
+        RentableBooks := true;
+        FirstInstance := true;
+
+
+        if DCLibraryBookListTable.FindSet() then
+            repeat
+                if DCLibraryBookListTable."Customer Renting ID" <> '' then begin
+                    RentableBooks := false;
+                    InvalidBookList.Add(DCLibraryBookListTable.Title);
+                end;
+            until DCLibraryBookListTable.Next() = 0;
+
+
+        if not RentableBooks then begin
+            foreach InvalidBook in InvalidBookList do begin
+                if FirstInstance then begin
+                    FirstInstance := false;
+                    DisplayInvalidBooks += InvalidBook;
+                end
+                else
+                    DisplayInvalidBooks += ', ' + InvalidBook;
+            end;
+
+            //Error(BooksAlreadyRentedError, DisplayInvalidBooks);
+        end;
+
+        DCLibraryBookListTable.FindFirst();
+
+        //BookNumber := DCLibraryBookListTable."Book Number";
+        if Page.RunModal(Page::"DC Rent Multiple Books Page", DCLibraryBookListTable) = Action::LookupOK then begin
+            if DCLibraryBookListTable."Customer Renting ID" <> '' then begin
+                DCLibraryBookListTable.FindFirst();
+                Customer.Get(DCLibraryBookListTable."Customer Renting ID");
+                repeat
+                    DCLibraryBookListTable.Validate("Customer Renting ID", Customer."No.");
+                    DCLibraryBookListTable."Rented Amount" += 1;
+                    DCLibraryBookListTable.Validate("Date Rented", Today);
+                    DCLibraryBookListTable.Validate("Date Returned", 0D);
+                    DCLibraryBookListTable.Validate("Renting Status", Enum::"DC Book Renting Status"::" ");
+                    DCLibraryBookListTable."Customer Renting Name" := Customer.Name;
+                    DCLibraryBookListTable.Modify(true);
+                    Customer."Books Rented" += 1;
+                    //DCLibraryBookListTable."Customer Renting Name" := Customer.Name;
+
+                    OnRentBookEvent(DCLibraryBookListTable, false);
+
+                until DCLibraryBookListTable.Next() = 0;
+
+                Customer.Modify(true);
+                Message(CustomerRentedBook, Customer.Name);
+            end
+            else
+                Error('No Customer has been Inserted to rent multiple books.');
+        end;
+
+
+    end;
 
 
 
@@ -120,6 +186,8 @@ codeunit 50200 "DC Manage Rent Book Code"
         Customer: Record Customer;
         CustomerID: Code[20];
         BookNotRentedError: Label 'You cant return a book that is not being rented';
+        ReturnBookConfirm: label 'Are you sure you would like to return "%1"?';
+        BookReturnMessage: Label 'The Book "%1" has been returned';
     begin
         if IsHandled then
             exit;
@@ -149,6 +217,89 @@ codeunit 50200 "DC Manage Rent Book Code"
             Customer.Modify(true);
             Message(BookReturnMessage, DCLibraryBookListTable.Title);
 
+        end;
+
+
+
+    end;
+
+    procedure ReturnMultipleBooks(var DCLibraryBookListTable: Record "DC Library Book List Table")
+    var
+        Customer: Record Customer;
+        CustomerID: Code[20];
+        BookNotRentedError: Label 'The books "%1" can not be returned, since they have not been rented.';
+        ReturnableBooks, FirstInstance : Boolean;
+        InvalidBookList: List of [Text];
+        InvalidBook, DisplayInvalidBooks, DisplayReturnedBooks : Text;
+
+        ReturnBookConfirm: label 'Are you sure you would like to return multiple books?';
+        BookReturnMessage: Label 'The Books "%1" have been returned';
+    begin
+        FirstInstance := true;
+        ReturnableBooks := true;
+
+        /*if DCLibraryBookListTable."Customer Renting ID" = '' then begin
+            Error(BookNotRentedError);
+            exit;
+        end;*/
+
+        repeat
+            if DCLibraryBookListTable."Customer Renting ID" = '' then begin
+                ReturnableBooks := false;
+                InvalidBookList.Add(DCLibraryBookListTable.Title);
+            end;
+        until DCLibraryBookListTable.Next() = 0;
+
+
+        if not ReturnableBooks then begin
+            foreach InvalidBook in InvalidBookList do begin
+                if FirstInstance then begin
+                    FirstInstance := false;
+                    DisplayInvalidBooks += InvalidBook
+                end
+                else
+                    DisplayInvalidBooks += ', ' + InvalidBook;
+            end;
+
+            Error(BookNotRentedError, DisplayInvalidBooks);
+        end;
+
+        DCLibraryBookListTable.FindFirst();
+
+        if Confirm(ReturnBookConfirm, false, DCLibraryBookListTable.Title) then begin
+            //library section
+            //TODO put this in a sothat all the books can be returned simultaniously
+
+            repeat
+                //Message(DCLibraryBookListTable."Customer Renting ID");
+                OnReturnBookEvent(DCLibraryBookListTable, false);
+                CustomerID := DCLibraryBookListTable."Customer Renting ID";
+                // this is necessary
+                DCLibraryBookListTable.Validate("Customer Renting ID", '');
+                //DCLibraryBookListTable.Validate("Customer Renting Name", '');
+                DCLibraryBookListTable."Customer Renting Name" := '';
+                DCLibraryBookListTable.Validate(Rented, false);
+                DCLibraryBookListTable.Validate("Date Rented", 0D);
+                DCLibraryBookListTable.Validate("Date Returned", Today);
+                DCLibraryBookListTable.Validate("Renting Status", Enum::"DC Book Renting Status"::" ");
+                DCLibraryBookListTable.Modify(true);
+
+
+                //customer section
+                Customer.Get(CustomerID);
+                Customer."Books Rented" -= 1;
+                Customer.Modify(true);
+                if ReturnableBooks then begin
+                    ReturnableBooks := false;
+                    DisplayReturnedBooks += DCLibraryBookListTable.Title;
+                end
+                else
+                    DisplayReturnedBooks += ', ' + DCLibraryBookListTable.Title;
+
+
+            until DCLibraryBookListTable.Next() = 0;
+
+            Message(BookReturnMessage, DisplayReturnedBooks);
         end;
 
 

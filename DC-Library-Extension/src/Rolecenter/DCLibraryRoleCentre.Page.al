@@ -9,6 +9,7 @@ page 50106 "DC Library Role Center"
         {
             part(Activities; "DC Library Activity CuePart")
             {
+                Caption = 'Library Activities';
                 ApplicationArea = All;
             }
         }

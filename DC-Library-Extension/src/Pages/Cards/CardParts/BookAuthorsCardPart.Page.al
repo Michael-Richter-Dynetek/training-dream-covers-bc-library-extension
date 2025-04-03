@@ -1,20 +1,26 @@
-page 50109 "DC Add Author"
+page 50112 "Book Authors Card Part"
 {
-    PageType = Card;
+    PageType = CardPart;
     ApplicationArea = All;
     UsageCategory = Administration;
     SourceTable = "DC Author";
-    Caption = 'Add Author';
+    CardPageId = "DC Author Details";
 
     layout
     {
         area(Content)
         {
-            group("Add Author")
+            repeater(Authors)
             {
+                Editable = false;
                 field("Author Name"; Rec."Author Name")
                 {
                     ToolTip = 'Specifies the value of the Author Name field.', Comment = '%';
+                    DrillDownPageId = "DC Author Details";
+                }
+                field("Best Work"; Rec."Best Work")
+                {
+                    ToolTip = 'Specifies the value of the Best Work field.', Comment = '%';
                 }
                 field(Bio; Rec.Bio)
                 {
@@ -28,31 +34,7 @@ page 50109 "DC Add Author"
                 {
                     ToolTip = 'Specifies the value of the Death Date field.', Comment = '%';
                 }
-                field("Work Count"; Rec."Work Count")
-                {
-                    ToolTip = 'Specifies the value of the Work Count field.', Comment = '%';
-                }
-                field("Best Work"; Rec."Best Work")
-                {
-
-                }
             }
         }
     }
-    /*
-    actions
-    {
-        area(Processing)
-        {
-            action(ActionName)
-            {
-
-                trigger OnAction()
-                begin
-
-                end;
-            }
-        }
-    }*/
-
 }

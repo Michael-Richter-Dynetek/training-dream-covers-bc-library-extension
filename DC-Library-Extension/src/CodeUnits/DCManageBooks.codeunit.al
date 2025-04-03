@@ -29,15 +29,20 @@ codeunit 50100 "DC Manage Books Code"
         TempBookRecord: Record "DC Library Book List Table" temporary;
         SaveBook: Codeunit "DC Save Temporary Book Record";
         AddBookPage: Page "Add Book Page";
+        BookNotSavedMess: Label 'The book could not be saved since the title was empty.';
+        BookNumber: Code[20];
     begin
         TempBookRecord.Init();
         TempBookRecord.Insert(false);
 
-
         if Page.RunModal(Page::"Add Book Page", TempBookRecord) = Action::LookupOK then begin
-            if not ((TempBookRecord.Title = '') or ((TempBookRecord.Title = 'None'))) then
-                SaveBook.SaveTempBook(TempBookRecord);
-            Message(BookCreationLabel, TempBookRecord.Title);
+            if not (TempBookRecord.Title = '') then begin
+                BookNumber := SaveBook.SaveTempBook(TempBookRecord);
+                SaveBook.SaveAuthorsToBook(BookNumber);
+                Message(BookCreationLabel, TempBookRecord.Title);
+            end
+            else
+                Message(BookNotSavedMess);
         end;
     end;
 
@@ -50,13 +55,18 @@ codeunit 50100 "DC Manage Books Code"
     /// <param name="DCLibraryBookListTable">Record "DC Library Book List Table".</param>
     procedure AddSequelAndSeries(DCLibraryBookListTable: Record "DC Library Book List Table");
     var
+        TempRecord: Record "DC Library Book List Table" temporary;
+        DCBookAuthors: Record "DC Book Authors";
+        BookDetailsPage: Page "DC Book Details";
+        DCSaveTemporaryBookRecord: Codeunit "DC Save Temporary Book Record";
+        CopyFromBookNumber: Code[20];
         ReadyToAddBook: Boolean;
         BookSequel: Text[100];
-        TempRecord: Record "DC Library Book List Table" temporary;
-        BookDetailsPage: Page "DC Book Details";
     begin
         BookSequel := '';
         ReadyToAddBook := false;
+        //CopyFromBookNumber := DCLibraryBookListTable."Book Number";
+
 
 
         //get the current book series
@@ -77,6 +87,7 @@ codeunit 50100 "DC Manage Books Code"
             TempRecord := AddSequel(DCLibraryBookListTable);
             BookSequel := TempRecord.Title;
             DCLibraryBookListTable.SetFilter("Book Number", '%1', DCLibraryBookListTable."Book Number");
+            CopyFromBookNumber := DCLibraryBookListTable."Book Number";
             DCLibraryBookListTable.FindFirst();
 
             if BookSequel <> '' then begin
@@ -90,7 +101,13 @@ codeunit 50100 "DC Manage Books Code"
                 DCLibraryBookListTable := TempRecord;
                 DCLibraryBookListTable.Insert(true);
 
+                //TODO add here
+                DCBookAuthors := DCSaveTemporaryBookRecord.CopyAuthorsToBook(CopyFromBookNumber, DCLibraryBookListTable."Book Number");
+                DCBookAuthors.Modify();
+                DCBookAuthors.SetRange("Book Number", '');
+                DCBookAuthors.DeleteAll();
             end;
+            exit;
 
         end;
 
@@ -108,7 +125,8 @@ codeunit 50100 "DC Manage Books Code"
 
         CurrentRecord.Init();
         CurrentRecord.Validate(Series, DCLibraryBookListTable.Series);
-        CurrentRecord.Validate("Author Name", DCLibraryBookListTable."Author Name");
+        //CurrentRecord.Validate("Author Name", DCLibraryBookListTable."Author Name");// TODO AUTHOR
+
         CurrentRecord.Validate("Prequel Name", DCLibraryBookListTable."Prequel Name");
         CurrentRecord.Validate(Publisher, DCLibraryBookListTable.Publisher);
         CurrentRecord.Validate(Genre, DCLibraryBookListTable.Genre);
@@ -116,9 +134,10 @@ codeunit 50100 "DC Manage Books Code"
         CurrentRecord.Insert(true);
 
 
-        if (Page.RunModal(Page::"Add Book Page", CurrentRecord) = Action::LookupOK) and not ((CurrentRecord.Title = '') or (CurrentRecord.Title = 'None')) then begin
+        if (Page.RunModal(Page::"Add Book Page", CurrentRecord) = Action::LookupOK) and not (CurrentRecord.Title = '') then begin
             SequelTitle := CurrentRecord.Title;
             Message(SequelCreationLabel, CurrentRecord.Title);
+
             exit(CurrentRecord);
         end;
 
@@ -140,8 +159,11 @@ codeunit 50100 "DC Manage Books Code"
     procedure RemoveBook(DCLibraryBookListTable: Record "DC Library Book List Table")
     var
         BookTitleDeleted: Text[100];
+        DCBooksAuthors: Record "DC Book Authors";
     begin
         if Confirm(ConfirmDeleteMessage, false, DCLibraryBookListTable.Title) then begin
+            DCBooksAuthors.SetRange("Book Number", DCLibraryBookListTable."Book Number");
+            DCBooksAuthors.DeleteAll();
             BookTitleDeleted := DCLibraryBookListTable.Title;
             DCLibraryBookListTable.Delete();
             Message(BookDeleteMessage, BookTitleDeleted);

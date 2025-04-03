@@ -1,6 +1,6 @@
 page 50203 "DC Rent Return Log Page"
 {
-    PageType = Card;
+    PageType = List;
     ApplicationArea = All;
     UsageCategory = Administration;
     SourceTable = "DC Rented Books Log Table";
@@ -13,8 +13,9 @@ page 50203 "DC Rent Return Log Page"
         area(Content)
         {
             repeater("Rented and Returned Log")
-            {   
-                field("Log ID";Rec."Log ID"){
+            {
+                field("Log ID"; Rec."Log ID")
+                {
                     Caption = 'Log ID';
                     ApplicationArea = All;
                 }
@@ -23,7 +24,8 @@ page 50203 "DC Rent Return Log Page"
                     Caption = 'Rented or Returned';
                     ApplicationArea = All;
                 }
-                field("Book Number";Rec."Book Number"){
+                field("Book Number"; Rec."Book Number")
+                {
                     Caption = 'Book Number';
                     ApplicationArea = All;
                 }

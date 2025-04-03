@@ -26,11 +26,11 @@ page 50202 "DC Customer Books Page"
                     Caption = 'Title';
                     ApplicationArea = All;
                 }
-                field(Author; Rec."Author Name")
+                /*field(Author; Rec."Author Name")
                 {
                     Caption = 'Author';
                     ApplicationArea = All;
-                }
+                }*/
 
                 field(Rented; Rec.Rented)
                 {

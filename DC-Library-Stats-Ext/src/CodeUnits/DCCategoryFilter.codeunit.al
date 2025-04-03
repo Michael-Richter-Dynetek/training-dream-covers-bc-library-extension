@@ -22,7 +22,7 @@ codeunit 50150 "DC Category Filter Code"
             case DCFilterTextOptionsEnum of
                 DCFilterTextOptionsEnum::" ":
                     begin
-                        DCLibraryBookListTable.SetRange(Author);
+                        //DCLibraryBookListTable.SetRange(Author);
                         DCLibraryBookListTable.SetRange(Genre);
                         DCLibraryBookListTable.SetRange("Prequel Name");
                         DCLibraryBookListTable.SetRange(Title);
@@ -30,7 +30,7 @@ codeunit 50150 "DC Category Filter Code"
 
                 DCFilterTextOptionsEnum::"Author Name":
                     begin
-                        DCLibraryBookListTable.SetFilter(Author, '@*' + MiscTextFilter + '*');
+                        DCLibraryBookListTable.SetFilter("Book Number", GetBooksRelatedToAuthors(MiscTextFilter));
                         DCLibraryBookListTable.SetRange(Genre);
                         DCLibraryBookListTable.SetRange("Prequel Name");
                         DCLibraryBookListTable.SetRange(Title);
@@ -38,22 +38,23 @@ codeunit 50150 "DC Category Filter Code"
 
                 DCFilterTextOptionsEnum::Genre:
                     begin
-                        DCLibraryBookListTable.SetFilter(Genre, DCFindRelatedGenreCode.GetGenreFilterText(MiscTextFilter));
-                        DCLibraryBookListTable.SetRange(Author);
+                        //DCLibraryBookListTable.SetFilter(Genre, DCFindRelatedGenreCode.GetGenreFilterText(MiscTextFilter));
+                        DCLibraryBookListTable.SetFilter(Genre, '@*' + MiscTextFilter + '*');
+                        DCLibraryBookListTable.SetRange("Book Number");
                         DCLibraryBookListTable.SetRange("Prequel Name");
                         DCLibraryBookListTable.SetRange(Title);
                     end;
                 DCFilterTextOptionsEnum::"Publisher Name":
                     begin
                         DCLibraryBookListTable.SetFilter("Prequel Name", '@*' + MiscTextFilter + '*');
-                        DCLibraryBookListTable.SetRange(Author);
+                        DCLibraryBookListTable.SetRange("Book Number");
                         DCLibraryBookListTable.SetRange(Genre);
                         DCLibraryBookListTable.SetRange(Title);
                     end;
                 DCFilterTextOptionsEnum::Title:
                     begin
                         DCLibraryBookListTable.SetFilter(Title, '@*' + MiscTextFilter + '*');
-                        DCLibraryBookListTable.SetRange(Author);
+                        DCLibraryBookListTable.SetRange("Book Number");
                         DCLibraryBookListTable.SetRange(Genre);
                         DCLibraryBookListTable.SetRange("Prequel Name");
                     end;
@@ -62,11 +63,75 @@ codeunit 50150 "DC Category Filter Code"
             end;
         end
         else begin
-            DCLibraryBookListTable.SetRange(Author);
+            DCLibraryBookListTable.SetRange("Book Number");
             DCLibraryBookListTable.SetRange(Genre);
             DCLibraryBookListTable.SetRange("Prequel Name");
             DCLibraryBookListTable.SetRange(Title);
         end;
 
+    end;
+
+    local procedure GetBooksRelatedToAuthors(AuthorName: Text): Text
+    var
+        DCAuthor: Record "DC Author";
+        DCBookAuthors: Record "DC Book Authors";
+        FilterBooks, FilterAuthors, AuthorListItem : Text;
+        AuthorNotFound, FirstRecord : Boolean;
+        AuthorList: List of [Text];
+        counter: Integer;
+    begin
+        AuthorNotFound := false;
+        FirstRecord := true;
+        FilterBooks := '';
+        DCAuthor.SetFilter("Author Name", '@*' + AuthorName + '*');
+
+        if not DCAuthor.FindSet() then
+            AuthorNotFound := true
+        else
+            repeat
+                AuthorList.Add(DCAuthor."Author ID");
+            until DCAuthor.Next() = 0;
+
+
+        System.Clear(DCAuthor);
+        DCAuthor.SetFilter("Alternative Names", '@*' + AuthorName + '*');
+        if not DCAuthor.FindSet() then
+            exit('None');
+        repeat
+            AuthorList.Add(DCAuthor."Author ID");
+        until DCAuthor.Next() = 0;
+
+
+
+        FirstRecord := true;
+        foreach AuthorListItem in AuthorList do begin
+            if FirstRecord then begin
+                FirstRecord := false;
+                FilterAuthors += AuthorListItem;
+            end
+            else
+                FilterAuthors += '|' + AuthorListItem;
+        end;
+
+        // if AuthorNotFound and not DCAuthor.FindSet() then
+        //     DCBookAuthors.SetFilter("Author ID", DCAuthor."Author ID");
+
+        DCBookAuthors.SetFilter("Author ID", FilterAuthors);
+
+        if not DCBookAuthors.FindSet() then
+            exit('None');
+
+        FirstRecord := true;
+        repeat
+            if FirstRecord then begin
+                FirstRecord := false;
+                FilterBooks += DCBookAuthors."Book Number";
+            end
+            else begin
+                FilterBooks += '|' + DCBookAuthors."Book Number";
+            end;
+        until DCBookAuthors.Next() = 0;
+
+        exit(FilterBooks);
     end;
 }

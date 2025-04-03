@@ -29,21 +29,56 @@ page 50102 "Add Book Page"
                     ApplicationArea = All;
                     ToolTip = 'Enter the Title of the book.';
                 }
-                field(Author; Rec."Author Name")
+                field(Author; Authors)// TODO AUTHOR
                 {
                     Caption = 'Author';
-                    //Editable = true;
+                    Editable = false;
                     ApplicationArea = All;
                     ToolTip = 'Enter the Author of the book.';
 
                     trigger OnAssistEdit()
                     var
                         DCAuthor: Record "DC Author";
+                        DCAuthor2: Record "DC Author";
+                        //DCBookAuthors: Record "DC Book Authors";
+                        DCAuthorList: Page "DC Author List";
+                        FilterText: Text;
                     begin
-                        if Page.RunModal(Page::"DC Author List", DCAuthor) = Action::LookupOK then begin
-                            Rec.Validate("Author ID", DCAuthor."Author ID");
-                            Rec.Validate("Author Name", DCAuthor."Author Name");
-                            Rec.Modify();
+                        Clear(DCAuthorList);
+                        DCAuthorList.SetTableView(DCAuthor);
+                        DCAuthorList.SetRecord(DCAuthor);
+                        DCAuthorList.LookupMode(true);
+                        //DCAuthorList.LookupMode()
+                        if DCBookAuthors.Count <> 0 then
+                            DCBookAuthors.DeleteAll();
+
+                        if DCAuthorList.RunModal() = Action::LookupOK then begin
+                            DCAuthorList.SetSelectionFilter(DCAuthor);
+                            if DCAuthor.FindSet() then begin
+                                repeat
+                                    DCBookAuthors.Init();
+                                    DCBookAuthors."Book Number" := '';
+                                    DCBookAuthors."Author ID" := DCAuthor."Author ID";
+                                    DCBookAuthors.Insert();
+                                until DCAuthor.Next() = 0;
+
+                                DCBookAuthors.Modify();
+
+                                //Page.Run(Page::"DC Books Authors", DCBookAuthors);
+
+
+                                if DCAuthor.Count = 1 then
+                                    Authors := DCAuthor."Author Name"
+                                else
+                                    Authors := 'Multiple Authors';
+
+                                DCAuthor.Reset();
+                            end;
+
+
+                            //Rec.Validate("Author ID", DCAuthor."Author ID");
+                            //Rec.Validate("Author Name", DCAuthor."Author Name");
+                            // Rec.Modify();*/
                         end;
                     end;
                 }
@@ -118,7 +153,56 @@ page 50102 "Add Book Page"
 
             }
         }
+
+
     }
+
+    actions
+    {
+        area(Processing)
+        {
+            action(UploadImage)
+            {
+                Image = Picture;
+                Caption = 'Upload Book Cover';
+                ToolTip = 'This will insert a manual image for the book.';
+                ApplicationArea = All;
+
+                trigger OnAction()
+                var
+                    GetImage: InStream;
+                    InsertImage: OutStream;
+                    Filename: Text;
+                begin
+                    if not UploadIntoStream('Upload Image', '', '', Filename, GetImage) then
+                        exit;
+
+                    Rec."Book Cover".ImportStream(GetImage, '');
+                    Rec.Validate("Book Cover Filename", Filename);
+                end;
+
+            }
+        }
+    }
+
+
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    var
+        DCBookAuthors2: Record "DC Book Authors";
+    begin
+        if CloseAction = Action::LookupOK then begin
+            if DCBookAuthors.FindSet() then begin
+                repeat
+                    DCBookAuthors2.Init();
+                    DCBookAuthors2.Validate("Book Number", DCBookAuthors."Book Number");
+                    DCBookAuthors2.Validate("Author ID", DCBookAuthors."Author ID");
+                    DCBookAuthors2.Insert(true);
+                until DCBookAuthors.Next() = 0;
+                //Page.Run(Page::"DC Books Authors", DCBookAuthors2);
+                DCBookAuthors2.Modify(true);
+            end;
+        end;
+    end;
 
     trigger OnOpenPage()
     begin
@@ -127,4 +211,6 @@ page 50102 "Add Book Page"
 
     var
         DCBookGenreEnum: Enum "DC Book Genre Enum";
+        DCBookAuthors: Record "DC Book Authors" temporary;
+        Authors: Text;
 }

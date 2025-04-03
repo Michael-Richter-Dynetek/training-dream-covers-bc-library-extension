@@ -1,7 +1,7 @@
 /// <summary>
 /// This table will contain all the books in the library
 /// </summary>
-table 50100 "DC Library Book List Table"//TODO change name, to better
+table 50100 "DC Library Book List Table"
 {
 
     DataClassification = CustomerContent;
@@ -12,45 +12,44 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         {
             Caption = 'Book Number';
             DataClassification = CustomerContent;
-            //AutoIncrement = true;
-
         }
-        field(10; Title; Text[100])
+        field(10; Title; Text[2000])
         {
             Caption = 'Title';
             //DataClassification = CustomerContent;
         }
-        field(19; "Author ID"; Code[20])
+        /*field(19; "Author ID"; Code[20])
         {
             Caption = 'Author ID';
-            TableRelation = "DC Author";
+            TableRelation = "DC Author"."Author ID";
         }
-        field(20; "Author Name"; Text[100])
+        field(20; "Author Name"; Text[200])
         {
             Caption = 'Author';
             FieldClass = FlowField;
-            CalcFormula = lookup("DC Library Book List Table"."Author Name" where("Author ID" = field("Author ID")));
-        }
+            CalcFormula = lookup("DC Author"."Author Name" where("Author ID" = field("Author ID")));
+        }*/
         field(50; Series; Text[100])
         {
             Caption = 'Series';
         }
-        /*field(59; "Genre ID"; Integer)
+        field(59; "Genre ID"; Integer)
         {
             Caption = 'Genre ID';
-            //TableRelation = "DC Genre Table"."Genre ID";
-        }*/
-        field(60; Genre; Enum "DC Book Genre Enum")
+            TableRelation = "DC Genre Table"."Genre ID";
+        }
+        field(60; Genre; Text[200])
         {
             Caption = 'Genre';
-            //FieldClass = FlowField;
-            //CalcFormula = lookup("DC Genre Table".Genre where("Genre ID" = field("Genre ID")));
+            TableRelation = "DC Genre Table";
+            FieldClass = FlowField;
+            CalcFormula = lookup("DC Genre Table".Genre where("Genre ID" = field("Genre ID")));
         }
         field(70; "Book Price"; Decimal)
         {
             Caption = 'Price';
         }
-        field(80; Publisher; Text[100])
+        field(80; Publisher; Text[2000])
         {
             Caption = 'Publisher';
         }
@@ -89,12 +88,26 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         {
             Caption = 'Date Added';
         }
-        field(50100; Description; Text[1024])
+        field(50100; Description; Text[2048])
         {
             Caption = 'Description';
         }
+        field(50109; "Book Cover Filename"; Text[2048])
+        {
+            Caption = 'Book Cover Filename';
+        }
+        field(50110; "Book Cover"; Media)
+        {
+            Caption = 'Book Cover';
+        }
+        field(50115; "Book Authors Filter"; Text[2048])
+        {
+            FieldClass = FlowFilter;
+        }
 
     }
+
+
 
     keys
     {
@@ -102,6 +115,11 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         {
             Clustered = true;
         }
+    }
+
+    fieldgroups
+    {
+        fieldgroup(Brick; Title, "Date Added", "Book Cover") { }
     }
 
     trigger OnInsert()
@@ -112,22 +130,6 @@ table 50100 "DC Library Book List Table"//TODO change name, to better
         SeriesCode := NoSeries.GetNextNo('B-ID', WorkDate());
         Rec.Validate("Book Number", SeriesCode);
     end;
-
-    trigger OnModify()
-    begin
-    end;
-
-    trigger OnDelete()
-    begin
-
-    end;
-
-    trigger OnRename()
-    begin
-
-    end;
-
-
 
 
 }

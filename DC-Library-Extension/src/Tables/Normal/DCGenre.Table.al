@@ -41,6 +41,11 @@ table 50101 "DC Genre Table"
         }
     }
 
+    fieldgroups
+    {
+        fieldgroup(DropDown; Genre) { }
+    }
+
     var
         GenreAlreadyExistMessage: Label 'The entered genre "%1" already exists';
         GenreAddedMessage: Label 'The genre "%1" has already been inserted';

@@ -198,10 +198,8 @@ page 50100 "DC Library Book list Page"
                 ApplicationArea = All;
                 Image = ContactPerson;
 
-                trigger OnAction()
-                begin
-                    if Page.RunModal(Page::"DC Author List") = Action::LookupOK then;
-                end;
+                RunObject = Page "DC Author List";
+
             }
         }
     }

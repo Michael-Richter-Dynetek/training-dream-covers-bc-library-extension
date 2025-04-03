@@ -9,12 +9,12 @@ table 50251 "DC Library Online Books"
             DataClassification = CustomerContent;
             AutoIncrement = true;
         }
-        field(10; Title; Text[300])
+        field(10; Title; Text[2000])
         {
             Caption = 'Title';
             //DataClassification = CustomerContent;
         }
-        field(20; Author; Text[100])
+        field(20; Author; Text[2000])
         {
             Caption = 'Author';
         }
@@ -22,6 +22,7 @@ table 50251 "DC Library Online Books"
         {
             Caption = 'Description Key';
         }
+        field(40; "Cover Key"; Code[20]) { }
 
     }
 

@@ -12,7 +12,7 @@ table 50104 "DC Library Activity CuePart"
         {
             Caption = 'Books Added this Month';
             FieldClass = FlowField;
-            CalcFormula = count("DC Library Book List Table" where("Date Added" = filter('CM-1M..t')));
+            CalcFormula = count("DC Library Book List Table" where("Date Added" = filter('t-1M..t')));
         }
     }
 

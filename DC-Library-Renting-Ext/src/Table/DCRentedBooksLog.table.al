@@ -17,7 +17,7 @@ table 50200 "DC Rented Books Log Table"
             Caption = 'Book ID';
             TableRelation = "DC Library Book List Table"."Book Number";
         }
-        field(10; Title; Text[100])
+        field(10; Title; Text[2048])
         {
             Caption = 'Title';
             //DataClassification = CustomerContent;
@@ -26,7 +26,7 @@ table 50200 "DC Rented Books Log Table"
         {
             Caption = 'Rented Or Returned';
         }
-        field(30; "Customer Renting Name"; Text[100])
+        field(30; "Customer Renting Name"; Text[2048])
         {
             Caption = 'Customer Renting Name';
         }

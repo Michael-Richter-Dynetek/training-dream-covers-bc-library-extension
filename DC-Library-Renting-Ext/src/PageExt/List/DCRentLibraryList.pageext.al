@@ -96,8 +96,14 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                 trigger OnAction()
                 var
                     DCManageRentBook: Codeunit "DC Manage Rent Book Code";
+                    DCLibraryBookListTable: Record "DC Library Book List Table";
                 begin
-                    DCManageRentBook.RunRentBookCode(Rec);
+                    SetSelectionFilter(DCLibraryBookListTable);
+                    DCLibraryBookListTable.FindSet();
+                    if DCLibraryBookListTable.Count > 1 then
+                        DCManageRentBook.RentMulitpleBooks(DCLibraryBookListTable)
+                    else
+                        DCManageRentBook.RunRentBookCode(Rec);
                 end;
             }
             action(ReturnBook)
@@ -112,10 +118,21 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                     DCUpdateBookStatus: Codeunit "DC Update Book Status";
                     DCManageRentBook: Codeunit "DC Manage Rent Book Code";
                     DCEndProbation: Codeunit "DC Update Customer Status";
+                    DCLibraryBookListTable: Record "DC Library Book List Table";
                 begin
-                    DCManageRentBook.ReturnBook(Rec, false);
-                    DCUpdateBookStatus.UpdateBookStatus(Rec."Customer Renting ID");
-                    DCEndProbation.Run();
+                    SetSelectionFilter(DCLibraryBookListTable);
+                    DCLibraryBookListTable.FindSet();
+                    if DCLibraryBookListTable.Count > 1 then begin
+                        DCManageRentBook.ReturnMultipleBooks(DCLibraryBookListTable);
+                        DCUpdateBookStatus.UpdateBookStatus(Rec."Customer Renting ID");
+                        DCEndProbation.Run();
+                    end
+                    else begin
+                        DCManageRentBook.ReturnBook(Rec, false);
+                        DCUpdateBookStatus.UpdateBookStatus(Rec."Customer Renting ID");
+                        DCEndProbation.Run();
+                    end;
+
                     CurrPage.Update(true);
                 end;
             }
@@ -127,6 +144,8 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                 Image = Log;
 
                 trigger OnAction()
+                var
+                    DCLibraryBookListTable: Record "DC Library Book List Table";
                 begin
                     Page.Run(Page::"DC Rent Return Log Page");
                 end;

@@ -11,7 +11,7 @@ page 50204 "DC Library DashBoard"
         {
             group(Filters)
             {
-                field("Author Filter"; AuthorFilter)
+                /*field("Author Filter"; AuthorFilter)
                 {
                     trigger OnValidate()
                     begin
@@ -19,17 +19,20 @@ page 50204 "DC Library DashBoard"
                         Rec.SetFilter("Author Filter", AuthorFilter);
                         CurrPage.Update();
                     end;
-                }
+                }*/
                 field("Genre Filter"; GenreFilter)
                 {
                     trigger OnValidate()
                     begin
-                        if GenreFilter = Enum::"DC Book Genre Enum"::" " then begin
+                        /*if GenreFilter = Enum::"DC Book Genre Enum"::" " then begin
                             Rec.SetRange("Genre Filter");
                             CurrPage.Update();
                             exit;
                         end;
                         Rec.SetFilter("Genre Filter", '%1', GenreFilter);
+                        CurrPage.Update();*/
+                        GenreFilter := '@*' + GenreFilter + '*';
+                        Rec.SetFilter("Genre Filter", GenreFilter);
                         CurrPage.Update();
                     end;
                 }
@@ -110,7 +113,7 @@ page 50204 "DC Library DashBoard"
 
     var
         AuthorFilter: Text[100];
-        GenreFilter: Enum "DC Book Genre Enum";
+        GenreFilter: Text[203] /*Enum "DC Book Genre Enum"*/;
         PublishingDateFilter: Text[100];
         BookAddedDateFilter: Text[100];
     //Rec: Record "DC Libr DashBoard";

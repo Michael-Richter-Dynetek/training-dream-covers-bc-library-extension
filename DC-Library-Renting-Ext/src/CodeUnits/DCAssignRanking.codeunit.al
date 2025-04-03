@@ -47,17 +47,15 @@ codeunit 50207 "DC Assign Ranking Code"
 
         if DCLibraryBookListTable.FindSet() then
             repeat
-                DCRentedBooksLogTable.SetRange("Date Time log", CreateDateTime(CalcDate('<-1M>',CurrentDateTime.Date), CurrentDateTime.Time) ,CurrentDateTime);
+                DCRentedBooksLogTable.SetRange("Date Time log", CreateDateTime(CalcDate('<-1M>', CurrentDateTime.Date), CurrentDateTime.Time), CurrentDateTime);
                 //DCRentedBooksLogTable.SetFilter("Date Time log", '%1 .. %2',CreateDateTime(CalcDate('<-1M>',CurrentDateTime.Date), CurrentDateTime.Time) ,CurrentDateTime);
-                DCRentedBooksLogTable.SetFilter(Title, DCLibraryBookListTable.Title);
-                if DCRentedBooksLogTable.FindSet() then begin
-                    DCLibraryBookListTable.Validate("Amount Rented Month", DCRentedBooksLogTable.Count());
-                    DCLibraryBookListTable.Modify();
-                end
-                else begin
+                DCRentedBooksLogTable.SetFilter("Book Number", DCLibraryBookListTable."Book Number");
+                DCRentedBooksLogTable.SetFilter("Rented/Returned", '%1', Enum::"DC Rented Returned Enum"::Rented);
+                if DCRentedBooksLogTable.FindSet() then
+                    DCLibraryBookListTable.Validate("Amount Rented Month", DCRentedBooksLogTable.Count())
+                else
                     DCLibraryBookListTable.Validate("Amount Rented Month", 0);
-                    DCLibraryBookListTable.Modify();
-                end;
+                DCLibraryBookListTable.Modify();
                 System.Clear(DCRentedBooksLogTable);
                 RecordCount := DCLibraryBookListTable.Next();
             until RecordCount = 0;//DCLibraryBookListTable.Next() = 0;
@@ -77,12 +75,12 @@ codeunit 50207 "DC Assign Ranking Code"
 
         if DCLibraryBookListTable.FindSet() then
             repeat
-                DCLibraryBookListTable.Validate("Book Ranking", RankCounter);
+
 
                 if PreviousBookRentedAmount = DCLibraryBookListTable."Amount Rented Month" then
                     RankCounter -= 1;
 
-                PreviousBookRentedAmount := DCLibraryBookListTable."Amount Rented Month";
+                DCLibraryBookListTable.Validate("Book Ranking", RankCounter);
                 DCLibraryBookListTable.Modify();
 
                 RankCounter += 1;

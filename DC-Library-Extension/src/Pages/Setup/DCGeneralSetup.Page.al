@@ -3,7 +3,7 @@ page 50103 "DC General Setup Page"
 
     PageType = Card;
     SourceTable = "DC Genral Setup Table";
-    Caption = 'PageName Setup';
+    Caption = 'DC Library General Setup';
     InsertAllowed = false;
     DeleteAllowed = false;
     UsageCategory = Administration;

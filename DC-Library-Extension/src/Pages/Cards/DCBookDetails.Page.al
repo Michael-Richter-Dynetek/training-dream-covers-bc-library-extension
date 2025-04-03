@@ -35,7 +35,7 @@ page 50101 "DC Book Details"
                     ToolTip = 'This is the book Title.';
                     Editable = true;
                 }
-                field(Author; Rec."Author Name")
+                /*field(Author; Rec."Author Name")// TODO AUTHOR
                 {
                     Caption = 'Author';
                     ApplicationArea = All;
@@ -53,6 +53,9 @@ page 50101 "DC Book Details"
                         end;
                     end;
 
+                }*/
+                field("Book Cover"; Rec."Book Cover")
+                {
                 }
             }
             group("Book Series")
@@ -82,11 +85,19 @@ page 50101 "DC Book Details"
             }
             group("More Information")
             {
+                field("Genre ID"; Rec."Genre ID")
+                {
+                    Caption = 'Genre ID';
+                    ApplicationArea = All;
+                    ToolTip = 'This is the genre of this book.';
+                    //TableRelation = "DC Genre Table";
+                }
                 field(Genre; Rec.Genre)
                 {
                     Caption = 'Genre';
                     ApplicationArea = All;
                     ToolTip = 'This is the genre of this book.';
+                    //TableRelation = "DC Genre Table";
                     //Editable = true;
 
                     /*trigger OnAssistEdit()
@@ -123,6 +134,26 @@ page 50101 "DC Book Details"
                     Editable = true;
                 }
             }
+            group("Book Authors")
+            {
+
+                part(BookAuthorsCardPart; "Book Authors Card Part")
+                {
+                    Caption = 'Book Authors';
+                    // SubPageLink = "Author ID" = field("Book Authors Filter");
+                    SubPageLink = "Author ID" = field("Book Authors Filter");
+                }
+            }
+        }
+        area(FactBoxes)
+        {
+            part(BookCover; "DC Book Cover Card Part")
+            {
+                Caption = 'Book Cover Image';
+                //SubPageLink = "Book Cover" = const
+                SubPageLink = "Book Number" = field("Book Number");
+            }
+
         }
     }
 
@@ -163,8 +194,95 @@ page 50101 "DC Book Details"
                     DCManageBooks.AddSequelAndSeries(Rec);
                 end;
             }
+            action(UploadImage)
+            {
+                Image = Picture;
+                Caption = 'Upload Book Cover';
+                ToolTip = 'This will insert a manual image for the book.';
+                ApplicationArea = All;
+
+                trigger OnAction()
+                var
+                    GetImage: InStream;
+                    Filename: Text;
+                begin
+                    if not UploadIntoStream('Upload Image', '', '', Filename, GetImage) then
+                        exit;
+
+                    Rec."Book Cover".ImportStream(GetImage, '');
+                    Rec.Validate("Book Cover Filename", Filename);
+                    Rec.Modify(true);
+                    CurrPage.Update(true);
+                end;
+
+            }
+
+            action(RetrieveImage)
+            {
+                Image = Picture;
+                Caption = 'Retrieve Book Cover';
+                ToolTip = 'This will insert a manual image for the book.';
+                ApplicationArea = All;
+
+                trigger OnAction()
+                var
+                    TempBlob: Codeunit "Temp Blob";
+                    GetImage: OutStream;
+                    DownloadImage: InStream;
+                    Filename: Text;
+                begin
+                    if Rec."Book Cover Filename" = '' then
+                        Filename := Rec.Title + '.png'
+                    else
+                        Filename := Rec."Book Cover Filename";
+                    //Rec.CalcFields("Book Cover");
+                    if not Rec."Book Cover".HasValue then
+                        exit;
+                    TempBlob.CreateOutStream(GetImage, TextEncoding::Windows);
+                    Rec."Book Cover".ExportStream(GetImage);
+                    TempBlob.CreateInStream(DownloadImage, TextEncoding::Windows);
+                    DownloadFromStream(DownloadImage, 'Download Cover Book', '', '', Filename);
+                end;
+
+            }
+
         }
     }
+
+
+
+
+    trigger OnAfterGetRecord()
+    var
+        DCAuthor: Record "DC Author";
+    begin
+        GenerateAuthorFilter();
+    end;
+
+    local procedure GenerateAuthorFilter()
+    var
+        DCBookAuthors: Record "DC Book Authors";
+        BookAuthors: Text[2048];
+        FirstBook: Boolean;
+    begin
+        BookAuthors := '';
+        FirstBook := true;
+        DCBookAuthors.SetRange("Book Number", Rec."Book Number");
+        if DCBookAuthors.FindSet() then
+            repeat
+                if FirstBook then begin
+                    BookAuthors += DCBookAuthors."Author ID";
+                    FirstBook := false;
+                end else
+                    BookAuthors += '|' + DCBookAuthors."Author ID";
+            until DCBookAuthors.Next() = 0;
+
+        if BookAuthors <> Rec."Book Authors Filter" then begin
+            // Rec.Validate("Book Authors Filter", BookAuthors);
+            Rec.SetFilter("Book Authors Filter", BookAuthors);
+            Rec.Modify(true);
+        end;
+    end;
 
 
 
