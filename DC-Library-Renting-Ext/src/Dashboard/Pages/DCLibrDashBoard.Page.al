@@ -11,18 +11,26 @@ page 50204 "DC Library DashBoard"
         {
             group(Filters)
             {
-                /*field("Author Filter"; AuthorFilter)
+                field("Author Filter"; AuthorFilter)
                 {
                     trigger OnValidate()
                     begin
+                        /*
                         AuthorFilter := '@*' + AuthorFilter + '*';
-                        Rec.SetFilter("Author Filter", AuthorFilter);
-                        CurrPage.Update();
+                        Rec.SetFilter("Author Filter", AuthorFilter);*/
+                        if TestBrackets(AuthorFilter) then begin
+                            Rec.SetAuthorFilter(AuthorFilter);
+                            CurrPage.Update();
+                        end
+                        else
+                            Error(GetLastErrorText());
                     end;
-                }*/
+                }
                 field("Genre Filter"; GenreFilter)
                 {
                     trigger OnValidate()
+                    var
+                        NoBracketsAllowed: label 'No Brackets are Allowed.';
                     begin
                         /*if GenreFilter = Enum::"DC Book Genre Enum"::" " then begin
                             Rec.SetRange("Genre Filter");
@@ -31,27 +39,39 @@ page 50204 "DC Library DashBoard"
                         end;
                         Rec.SetFilter("Genre Filter", '%1', GenreFilter);
                         CurrPage.Update();*/
-                        GenreFilter := '@*' + GenreFilter + '*';
-                        Rec.SetFilter("Genre Filter", GenreFilter);
-                        CurrPage.Update();
+                        //GenreFilter := '@*' + GenreFilter + '*';
+                        if TestBrackets(GenreFilter) then begin
+                            Rec.SetFilter("Genre Filter", '@*' + GenreFilter + '*');
+                            CurrPage.Update();
+                        end
+                        else
+                            Error(GetLastErrorText());
                     end;
                 }
                 field("Publishing Date Filter"; PublishingDateFilter)
                 {
                     trigger OnValidate()
                     begin
-                        Rec.SetFilter("Publishing Date Filter", PublishingDateFilter);
-                        PublishingDateFilter := Rec.GetFilter("Publishing Date Filter");//TODO add to all fields
-                        CurrPage.Update();
+                        if TestBrackets(PublishingDateFilter) then begin
+                            Rec.SetFilter("Publishing Date Filter", PublishingDateFilter);
+                            PublishingDateFilter := Rec.GetFilter("Publishing Date Filter");//TODO add to all fields
+                            CurrPage.Update();
+                        end
+                        else
+                            Error(GetLastErrorText());
                     end;
                 }
                 field("Book Added Date Filter"; BookAddedDateFilter)
                 {
                     trigger OnValidate()
                     begin
-                        Rec.SetFilter("Book Added Date Filter", BookAddedDateFilter);
-                        BookAddedDateFilter := Rec.GetFilter("Book Added Date Filter");
-                        CurrPage.Update();
+                        if TestBrackets(BookAddedDateFilter) then begin
+                            Rec.SetFilter("Book Added Date Filter", BookAddedDateFilter);
+                            BookAddedDateFilter := Rec.GetFilter("Book Added Date Filter");
+                            CurrPage.Update();
+                        end
+                        else
+                            Error(GetLastErrorText());
                     end;
                 }
             }
@@ -116,5 +136,15 @@ page 50204 "DC Library DashBoard"
         GenreFilter: Text[203] /*Enum "DC Book Genre Enum"*/;
         PublishingDateFilter: Text[100];
         BookAddedDateFilter: Text[100];
+
     //Rec: Record "DC Libr DashBoard";
+
+    [TryFunction]
+    local procedure TestBrackets(FilterText: Text)
+    var
+        NoBracketsAllowed: label 'No Brackets are Allowed.';
+    begin
+        if FilterText.Contains('(') or FilterText.Contains(')') then
+            Error(NoBracketsAllowed);
+    end;
 }

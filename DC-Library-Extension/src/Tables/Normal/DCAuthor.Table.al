@@ -56,7 +56,7 @@ table 50105 "DC Author"
             Clustered = true;
         }
     }
-    
+
     fieldgroups
     {
         fieldgroup(Brick; "Author Name", "Alternative Names", "Best Work", "Author Cover Image") { }
@@ -67,7 +67,7 @@ table 50105 "DC Author"
         NoSeries: Codeunit "No. Series";
         SeriesCode: Code[20];
     begin
-        SeriesCode := NoSeries.GetNextNo('DC-AUTH', WorkDate());
+        SeriesCode := NoSeries.GetNextNo('A-ID', WorkDate());
         Rec.Validate("Author ID", SeriesCode);
     end;
 

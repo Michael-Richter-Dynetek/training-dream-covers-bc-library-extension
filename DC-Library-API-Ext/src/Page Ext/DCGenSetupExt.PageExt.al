@@ -8,9 +8,11 @@ pageextension 50252 "DC Gen Setup Ext" extends "DC General Setup Page"
             {
                 field("Online Book API ID"; Rec."Online Book API ID")
                 {
+                    ApplicationArea = all;
                 }
                 field("Online Book Cover API ID"; Rec."Online Book Cover API ID")
                 {
+                    ApplicationArea = all;
                 }
             }
         }

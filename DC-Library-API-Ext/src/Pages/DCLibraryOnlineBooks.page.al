@@ -52,7 +52,7 @@ page 50250 "DC Library Online Books"
 
                     CurrPage.SetSelectionFilter(Rec);
                     if Rec.FindFirst() then begin
-                        Window.Open(WindowMessage, CurrentBookCount, CurrentTotalBookCount, CurrentAuthorCount, CurrentTotalAuthorCount);
+                        Window.Open('Processing #2#### Books:\ #1#### Processing Authors: #4#### #3####', CurrentBookCount, CurrentTotalBookCount, CurrentAuthorCount, CurrentTotalAuthorCount);
                         CurrentTotalBookCount := Rec.Count;
                         repeat
                             CurrentBookCount += 1;
@@ -62,13 +62,14 @@ page 50250 "DC Library Online Books"
                             Window.Update();
 
                             // run procedure to get publication date and page amount
-                            if RetrieveBookInformation(DCLibraryBookListTable) then begin
-                                DCLibraryBookListTable.Insert(true);
-                                StoreAuthor(DCLibraryBookListTable, AuthorList);
-                                Message(BookAddedLabel, Rec.Title);
-                            end
-                            else
-                                Message(UnabbleAddBook, Rec.Title);
+                            // if RetrieveBookInformation(DCLibraryBookListTable) then begin
+                            RetrieveBookInformation(DCLibraryBookListTable);
+                            DCLibraryBookListTable.Insert(true);
+                            StoreAuthor(DCLibraryBookListTable, AuthorList);
+                            Message(BookAddedLabel, Rec.Title);
+                        //end
+                        //else
+                        //Message(UnabbleAddBook, Rec.Title);
 
 
                         until Rec.Next() = 0;
@@ -81,7 +82,7 @@ page 50250 "DC Library Online Books"
         }
     }
 
-    [TryFunction]
+    //[TryFunction]
     local procedure RetrieveBookInformation(var DCLibraryBookListTable: Record "DC Library Book List Table")
     var
         DCLibraryOnlineBooks: Codeunit "DC Library Online Books C";

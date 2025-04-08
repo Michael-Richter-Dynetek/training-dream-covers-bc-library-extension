@@ -33,7 +33,7 @@ page 50251 "DC Search Book Bar"
             }
         }
     }*/
-
+/*
     var
-        BookToSearch: Text;
+        BookToSearch: Text;*/
 }

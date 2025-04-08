@@ -350,6 +350,14 @@ codeunit 50250 "DC Library Online Books C"
 
     end;
 
+    local procedure RemoveStrange(var AuthorName: Text; Bracket: Text[1])
+    var
+        BracketIndex: Integer;
+    begin
+        BracketIndex := AuthorName.IndexOf(Bracket);
+        AuthorName := AuthorName.Remove(BracketIndex - 1, (Text.StrLen(AuthorName) - (BracketIndex + 1)))
+    end;
+
     //Test should be run once per Author, so only one auther should be inserted at a time.
     procedure TestAuthorAlreadyExist(AuthorName: Text[2000]): Code[20]
     var
@@ -358,6 +366,14 @@ codeunit 50250 "DC Library Online Books C"
         AuthorID: Code[20];
     begin
         AuthorID := '';
+
+        if AuthorName.Contains('(') or AuthorName.Contains(')') then
+            if AuthorName.Contains('(') then
+                RemoveStrange(AuthorName,'(')
+            else
+                RemoveStrange(AuthorName,')');
+
+
         DCAuthor.SetFilter("Author Name", '@*' + AuthorName + '*');
         //Page.Run(Page::"DC Author List", DCAuthor);
 

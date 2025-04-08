@@ -7,6 +7,7 @@ page 50103 "DC General Setup Page"
     InsertAllowed = false;
     DeleteAllowed = false;
     UsageCategory = Administration;
+    ApplicationArea = all;
 
 
     layout

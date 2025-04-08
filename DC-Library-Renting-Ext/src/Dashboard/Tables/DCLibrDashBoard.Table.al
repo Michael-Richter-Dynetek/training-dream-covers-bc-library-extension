@@ -7,11 +7,11 @@ table 50201 "DC Libr DashBoard"
         field(1; "Primary Key"; Code[20])
         {
         }
-        /*field(10; "Author Filter"; Text[100])
+        field(10; "Author Filter"; Text[100])
         {
             Caption = 'Author';
             FieldClass = FlowFilter;
-        }*/
+        }
         field(20; "Genre Filter"; Text[250] /*Enum "DC Book Genre Enum"*/)
         {
             Caption = 'Genre';
@@ -33,7 +33,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 Rented = const(false),
-                //"Author Name" = field("Author Filter"),
+                "Book Number" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -45,7 +45,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 Rented = const(true),
-                //"Author Name" = field("Author Filter"),
+                "Book Number" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -57,7 +57,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::Mild),
-                //"Author Name" = field("Author Filter"),
+                "Book Number" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -69,7 +69,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::Medium),
-                //"Author Name" = field("Author Filter"),
+                "Book Number" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -81,7 +81,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::High),
-                //"Author Name" = field("Author Filter"),
+                "Book Number" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -93,7 +93,7 @@ table 50201 "DC Libr DashBoard"
             FieldClass = FlowField;
             CalcFormula = Count("DC Library Book List Table" where(
                 "Renting Status" = const("DC Book Renting Status"::Extreme),
-                //"Author Name" = field("Author Filter"),
+                "Book Number" = field("Author Filter"),
                 Genre = field("Genre Filter"),
                 "Publication Date" = field("Publishing Date Filter"),
                 "Date Added" = field("Book Added Date Filter")));
@@ -108,5 +108,48 @@ table 50201 "DC Libr DashBoard"
             Clustered = true;
         }
     }
+
+    procedure SetAuthorFilter(AuthorFilter: Text)
+    var
+        DCAuthor: Record "DC Author";
+        DCBookAuthor: Record "DC Book Authors";
+        AuthorIDFilter: Text;
+    begin
+        if AuthorFilter = '' then begin
+            Rec.SetFilter("Author Filter", '');
+            exit;
+        end;
+
+        DCAuthor.LoadFields("Author ID", "Author Name");
+        DCAuthor.SetFilter("Author Name", '@*' + AuthorFilter + '*');
+        if DCAuthor.FindFirst() then begin
+            AuthorFilter := DCAuthor."Author ID";
+            if DCAuthor.Next() <> 0 then
+                repeat
+                    AuthorFilter += '|' + DCAuthor."Author ID";
+                until DCAuthor.Next() = 0;
+        end
+        else begin
+            Rec.SetFilter("Author Filter", 'No Author Found');
+            exit;
+        end;
+
+        DCBookAuthor.SetFilter("Author ID", AuthorFilter);
+        if DCBookAuthor.FindFirst() then begin
+            AuthorFilter := DCBookAuthor."Book Number";
+            if DCBookAuthor.Next() <> 0 then
+                repeat
+                    AuthorFilter += '|' + DCBookAuthor."Book Number";
+                until DCBookAuthor.Next() = 0;
+        end
+        else begin
+            Rec.SetFilter("Author Filter", 'No Author Found');
+            exit;
+        end;
+
+        Rec.SetFilter("Author Filter", AuthorFilter);
+
+    end;
+
 
 }

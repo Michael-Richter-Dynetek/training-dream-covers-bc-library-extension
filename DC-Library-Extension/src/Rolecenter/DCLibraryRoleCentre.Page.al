@@ -24,6 +24,7 @@ page 50106 "DC Library Role Center"
                 Caption = 'Library Book List';
                 ToolTip = 'This will navigate you to the Library Book List Page of the Library Extension';
                 RunObject = Page "DC Library Book list Page";
+                ApplicationArea = all;
             }
 
         }
