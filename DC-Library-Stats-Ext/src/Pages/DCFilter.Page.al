@@ -226,6 +226,7 @@ page 50150 "DC Filter Page"
                 Caption = 'Navigate to Book List Page';
                 Image = LedgerBook;
                 ToolTip = 'This will navigate you to the Book List page.';
+                ApplicationArea = All;
 
                 trigger OnAction();
                 begin

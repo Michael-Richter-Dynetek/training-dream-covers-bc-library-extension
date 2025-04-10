@@ -169,6 +169,7 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                 Caption = 'Load Status';
                 Image = Action;
                 ToolTip = 'This will load Status';
+                ApplicationArea = All;
 
                 trigger OnAction()
                 var
@@ -184,6 +185,7 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
                 Caption = 'Refresh Ranking';
                 Image = RefreshRegister;
                 ToolTip = 'This will reset the book ranking and recalculate it';
+                ApplicationArea = All;
 
                 trigger OnAction()
                 var
@@ -207,6 +209,4 @@ pageextension 50200 "DC Rent Library List" extends "DC Library Book list Page"
         CurrPage.Update();
     end;
 
-    var
-        RunOnce: Boolean;
 }

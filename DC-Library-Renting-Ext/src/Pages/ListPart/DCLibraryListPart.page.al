@@ -16,34 +16,19 @@ page 50206 "DC Library Card Part"
                 field(Title; Rec.Title)
                 {
                     Caption = 'Title';
+                    ApplicationArea = All;
                 }
                 field(Description; Rec.Description)
                 {
                     Caption = 'Description';
+                    ApplicationArea = All;
                 }
                 field(Publisher; Rec.Publisher)
                 {
                     Caption = 'Publisher';
+                    ApplicationArea = All;
                 }
             }
         }
     }
-
-    actions
-    {
-        area(Processing)
-        {
-            action(ActionName)
-            {
-
-                trigger OnAction()
-                begin
-
-                end;
-            }
-        }
-    }
-
-    var
-        myInt: Integer;
 }

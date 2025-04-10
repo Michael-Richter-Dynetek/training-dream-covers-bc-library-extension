@@ -2,6 +2,7 @@ page 50106 "DC Library Role Center"
 {
     PageType = RoleCenter;
     Caption = 'Library';
+    ApplicationArea = All;
 
     layout
     {

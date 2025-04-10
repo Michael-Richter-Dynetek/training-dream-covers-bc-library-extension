@@ -56,6 +56,17 @@ page 50101 "DC Book Details"
                 }*/
                 field("Book Cover"; Rec."Book Cover")
                 {
+                    ApplicationArea = all;
+                }
+                group(Description)
+                {
+                    Caption = 'Description';
+                    field(Desc; Rec.Description)
+                    {
+                        ShowCaption = false;
+                        ApplicationArea = all;
+                        MultiLine = true;
+                    }
                 }
             }
             group("Book Series")
@@ -82,6 +93,7 @@ page 50101 "DC Book Details"
                     ToolTip = 'This is the Sequel Title to this book.';
                     Editable = true;
                 }
+
             }
             group("More Information")
             {
@@ -133,6 +145,7 @@ page 50101 "DC Book Details"
                     ToolTip = 'This is the total Amount of pages in the Book.';
                     Editable = true;
                 }
+
             }
             group("Book Authors")
             {

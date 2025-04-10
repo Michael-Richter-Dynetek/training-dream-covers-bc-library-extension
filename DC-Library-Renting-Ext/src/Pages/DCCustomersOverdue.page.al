@@ -16,12 +16,13 @@ page 50201 "DC Customers Overdue Page"
                 field(Name; Rec.Name)
                 {
                     DrillDownPageId = "Customer Card";
+                    ApplicationArea = All;
                 }
-                field("Current Highest Renting Status"; Rec."Current Highest Renting Status") { }
-                field("Books Rented"; Rec."Books Rented") { }
-                field("Fined Amount"; Rec."Fined Amount") { }
-                field("E-Mail"; Rec."E-Mail") { }
-                field("Phone No."; Rec."Phone No.") { }
+                field("Current Highest Renting Status"; Rec."Current Highest Renting Status") { ApplicationArea = All; }
+                field("Books Rented"; Rec."Books Rented") { ApplicationArea = All; }
+                field("Fined Amount"; Rec."Fined Amount") { ApplicationArea = All; }
+                field("E-Mail"; Rec."E-Mail") { ApplicationArea = All; }
+                field("Phone No."; Rec."Phone No.") { ApplicationArea = All; }
 
             }
         }

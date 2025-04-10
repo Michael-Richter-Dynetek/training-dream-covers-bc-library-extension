@@ -10,6 +10,7 @@ pageextension 50151 "DC Library Role Ext." extends "DC Library Role Center"
                 Caption = 'Navigate to Filter Page';
                 Image = FilterLines;
                 ToolTip = 'This will navigate you to the filter page.';
+                ApplicationArea = All;
 
                 RunObject = Page "DC Filter Page";
                 /*

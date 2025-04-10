@@ -8,6 +8,7 @@ table 50103 "DC Book Authors"
         {
             Caption = 'Book Number';
             //TableRelation = "DC Library Book List Table"."Book Number";
+            
 
         }
         field(10; "Author ID"; Code[20])

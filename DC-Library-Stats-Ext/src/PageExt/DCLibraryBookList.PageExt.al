@@ -13,6 +13,7 @@ pageextension 50150 "DC Library Book List Page Ext." extends "DC Library Book li
                 Caption = 'Navigate to Filter Page';
                 Image = FilterLines;
                 ToolTip = 'This will navigate you to the filter page.';
+                ApplicationArea = All;
 
                 trigger OnAction();
                 begin

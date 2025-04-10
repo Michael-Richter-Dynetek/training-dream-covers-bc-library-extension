@@ -8,13 +8,13 @@ pageextension 50202 "DC Customer Card Renting Ext" extends "Customer Card"
             {
                 Caption = 'Renting Information';
 
-                field("Books Rented"; Rec."Books Rented") { }
-                field("Allowed To Rent"; Rec."Allowed To Rent") { }
-                field("Current Highest Renting Status"; Rec."Current Highest Renting Status") { }
-                field("Highest Renting Status"; Rec."Highest Renting Status") { }
-                field("Book Probation"; Rec."Book Probation") { }
-                field("Book Probation Started"; Rec."Book Probation Started") { }
-                field("Fined Amount"; Rec."Fined Amount") { }
+                field("Books Rented"; Rec."Books Rented") { ApplicationArea = All; }
+                field("Allowed To Rent"; Rec."Allowed To Rent") { ApplicationArea = All; }
+                field("Current Highest Renting Status"; Rec."Current Highest Renting Status") { ApplicationArea = All; }
+                field("Highest Renting Status"; Rec."Highest Renting Status") { ApplicationArea = All; }
+                field("Book Probation"; Rec."Book Probation") { ApplicationArea = All; }
+                field("Book Probation Started"; Rec."Book Probation Started") { ApplicationArea = All; }
+                field("Fined Amount"; Rec."Fined Amount") { ApplicationArea = All; }
 
 
             }

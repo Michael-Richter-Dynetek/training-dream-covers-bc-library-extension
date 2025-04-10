@@ -16,11 +16,13 @@ page 50114 "DC Books Authors"
                 {
                     Caption = 'Book Number';
                     ToolTip = 'Specifies the value of the Book Number field.', Comment = '%';
+                    ApplicationArea = All;
                 }
                 field("Author ID"; Rec."Author ID")
                 {
                     Caption = 'Author ID';
                     ToolTip = 'Specifies the value of the Author ID field.', Comment = '%';
+                    ApplicationArea = All;
                 }
             }
         }

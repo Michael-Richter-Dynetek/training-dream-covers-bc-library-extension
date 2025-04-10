@@ -14,6 +14,7 @@ page 50251 "DC Search Book Bar"
                 field("Search Book"; Rec."Search Book")
                 {
                     Caption = 'Enter a book to search for.';
+                    ApplicationArea = All;
                 }
             }
         }

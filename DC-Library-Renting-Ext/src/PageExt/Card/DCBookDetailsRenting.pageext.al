@@ -95,12 +95,4 @@ pageextension 50201 "DC Book Details Renting Ext" extends "DC Book Details"
             }
         }
     }
-
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }

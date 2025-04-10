@@ -18,10 +18,12 @@ page 50250 "DC Library Online Books"
                 field(Title; Rec.Title)
                 {
                     Caption = 'Book Title';
+                    ApplicationArea = All;
                 }
                 field(Author; Rec.Author)
                 {
                     Caption = 'Author/s';
+                    ApplicationArea = All;
                 }
 
             }
@@ -37,22 +39,26 @@ page 50250 "DC Library Online Books"
                 Caption = 'Add Book';
                 ToolTip = 'This Allows you to Add Book to Library.';
                 Image = Add;
+                ApplicationArea = All;
 
                 trigger OnAction()
                 var
                     DCLibraryBookListTable: Record "DC Library Book List Table";
 
-                    BookAddedLabel: Label 'The Book "%1" has been added to the library.';
+                    BookAddedLabel: Label 'The Book/s "%1" have been added to the library.';
                     AuthorList: List of [Text];
                     UnabbleAddBook: Label 'Unable to add book with title "%1", due to data retrieval error.';
+                    BooksAdded: Text;
+                    FirstBook: Boolean;
                 begin //TODO SETSELECTION FILTER, loop through
                     CurrentBookCount := 0;
                     CurrentTotalBookCount := 0;
                     CurrentTotalAuthorCount := 0;
+                    FirstBook := true;
 
                     CurrPage.SetSelectionFilter(Rec);
                     if Rec.FindFirst() then begin
-                        Window.Open('Processing #2#### Books:\ #1#### Processing Authors: #4#### #3####', CurrentBookCount, CurrentTotalBookCount, CurrentAuthorCount, CurrentTotalAuthorCount);
+                        Window.Open('Processing Books: #2#### #1#### Processing Authors: #4#### #3####', CurrentBookCount, CurrentTotalBookCount, CurrentAuthorCount, CurrentTotalAuthorCount);
                         CurrentTotalBookCount := Rec.Count;
                         repeat
                             CurrentBookCount += 1;
@@ -66,13 +72,21 @@ page 50250 "DC Library Online Books"
                             RetrieveBookInformation(DCLibraryBookListTable);
                             DCLibraryBookListTable.Insert(true);
                             StoreAuthor(DCLibraryBookListTable, AuthorList);
-                            Message(BookAddedLabel, Rec.Title);
+                            //Message(BookAddedLabel, Rec.Title);
+                            if FirstBook then begin
+                                BooksAdded += Rec.Title;
+                                FirstBook := false;
+                            end
+                            else
+                                BooksAdded += ', ' + Rec.Title;
+
                         //end
                         //else
                         //Message(UnabbleAddBook, Rec.Title);
 
 
                         until Rec.Next() = 0;
+                        Message(BookAddedLabel, BooksAdded);
                         Window.Close();
                     end;
                     System.Clear(Rec);

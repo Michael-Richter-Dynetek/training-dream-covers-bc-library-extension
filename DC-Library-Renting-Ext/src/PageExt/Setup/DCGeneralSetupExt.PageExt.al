@@ -6,8 +6,8 @@ pageextension 50203 "DC General Setup Ext Page" extends "DC General Setup Page"
         {
             group("Late Book Fines")
             {
-                field("Late Book Warning Fine"; Rec."Late Book Warning Fine") { }
-                field("Late Book Fine"; Rec."Late Book Fine") { }
+                field("Late Book Warning Fine"; Rec."Late Book Warning Fine") {ApplicationArea = All; }
+                field("Late Book Fine"; Rec."Late Book Fine") {ApplicationArea = All; }
             }
             /*group("Status Change Messages")
             {

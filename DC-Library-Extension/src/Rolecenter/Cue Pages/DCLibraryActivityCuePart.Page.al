@@ -15,6 +15,7 @@ page 50107 "DC Library Activity CuePart"
                 field("Books Added Monthly"; Rec."Books Added Monthly")
                 {
                     DrillDownPageId = "DC Library Book list Page";
+                    ApplicationArea = All;
                 }
             }
         }

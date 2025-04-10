@@ -17,6 +17,7 @@ page 50202 "DC Customer Books Page"
                 {
                     Editable = false;
                     Caption = 'Filtering on Customer Name: ';
+                    ApplicationArea = All;
                 }
             }
             repeater(Books)

@@ -15,28 +15,38 @@ page 50110 "DC Author Details"
             {
                 field("Author Name"; Rec."Author Name")
                 {
+                    ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Author Name field.', Comment = '%';
-                }
-                field(Bio; Rec.Bio)
-                {
-                    MultiLine = true;
-                    ToolTip = 'Specifies the value of the Bio field.', Comment = '%';
                 }
                 field("Birth Date"; Rec."Birth Date")
                 {
+                    ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Birth date field.', Comment = '%';
                 }
                 field("Death Date"; Rec."Death Date")
                 {
+                    ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Death Date field.', Comment = '%';
                 }
                 field("Work Count"; Rec."Work Count")
                 {
+                    ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Work Count field.', Comment = '%';
                 }
                 field("Best Work"; Rec."Best Work")
                 {
+                    ApplicationArea = all;
+                }
+                group(Bio)
+                {
+                    Caption = 'Bio';
 
+                    field(BioDesc; Rec.Bio)
+                    {
+                        ApplicationArea = all;
+                        MultiLine = true;
+                        ShowCaption = false;
+                    }
                 }
             }
             group("Author Books")

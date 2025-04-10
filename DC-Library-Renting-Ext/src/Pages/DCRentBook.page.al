@@ -123,8 +123,8 @@ page 50200 "DC Rent Book Page"
         }
     }
 
-    var
-        ClearRentingName: Boolean;
+    /*var
+        ClearRentingName: Boolean;*/
 
 
 }

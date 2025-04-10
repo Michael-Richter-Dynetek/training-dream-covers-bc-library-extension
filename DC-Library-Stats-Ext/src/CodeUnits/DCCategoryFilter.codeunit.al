@@ -16,57 +16,59 @@ codeunit 50150 "DC Category Filter Code"
     var
         DCFindRelatedGenreCode: Codeunit "DC Find Related Genre Code";
     begin
-        //if the text filter is not empty then the filter will use the text filter to search for related records.
-        if MiscTextFilter <> '' then begin
-            //each case will filter according the case and clear text filters not relating to the case.
-            case DCFilterTextOptionsEnum of
-                DCFilterTextOptionsEnum::" ":
-                    begin
-                        //DCLibraryBookListTable.SetRange(Author);
-                        DCLibraryBookListTable.SetRange(Genre);
-                        DCLibraryBookListTable.SetRange("Prequel Name");
-                        DCLibraryBookListTable.SetRange(Title);
-                    end;
 
-                DCFilterTextOptionsEnum::"Author Name":
-                    begin
-                        DCLibraryBookListTable.SetFilter("Book Number", GetBooksRelatedToAuthors(MiscTextFilter));
-                        DCLibraryBookListTable.SetRange(Genre);
-                        DCLibraryBookListTable.SetRange("Prequel Name");
-                        DCLibraryBookListTable.SetRange(Title);
-                    end;
-
-                DCFilterTextOptionsEnum::Genre:
-                    begin
-                        //DCLibraryBookListTable.SetFilter(Genre, DCFindRelatedGenreCode.GetGenreFilterText(MiscTextFilter));
-                        DCLibraryBookListTable.SetFilter(Genre, '@*' + MiscTextFilter + '*');
-                        DCLibraryBookListTable.SetRange("Book Number");
-                        DCLibraryBookListTable.SetRange("Prequel Name");
-                        DCLibraryBookListTable.SetRange(Title);
-                    end;
-                DCFilterTextOptionsEnum::"Publisher Name":
-                    begin
-                        DCLibraryBookListTable.SetFilter("Prequel Name", '@*' + MiscTextFilter + '*');
-                        DCLibraryBookListTable.SetRange("Book Number");
-                        DCLibraryBookListTable.SetRange(Genre);
-                        DCLibraryBookListTable.SetRange(Title);
-                    end;
-                DCFilterTextOptionsEnum::Title:
-                    begin
-                        DCLibraryBookListTable.SetFilter(Title, '@*' + MiscTextFilter + '*');
-                        DCLibraryBookListTable.SetRange("Book Number");
-                        DCLibraryBookListTable.SetRange(Genre);
-                        DCLibraryBookListTable.SetRange("Prequel Name");
-                    end;
-
-
-            end;
-        end
-        else begin
+        if MiscTextFilter = '' then begin
             DCLibraryBookListTable.SetRange("Book Number");
             DCLibraryBookListTable.SetRange(Genre);
             DCLibraryBookListTable.SetRange("Prequel Name");
             DCLibraryBookListTable.SetRange(Title);
+            exit;
+        end;
+
+        //if the text filter is not empty then the filter will use the text filter to search for related records.
+
+        //each case will filter according the case and clear text filters not relating to the case.
+        case DCFilterTextOptionsEnum of
+            DCFilterTextOptionsEnum::" ":
+                begin
+                    DCLibraryBookListTable.SetRange("Book Number");
+                    DCLibraryBookListTable.SetRange(Genre);
+                    DCLibraryBookListTable.SetRange("Prequel Name");
+                    DCLibraryBookListTable.SetRange(Title);
+                end;
+
+            DCFilterTextOptionsEnum::"Author Name":
+                begin
+                    DCLibraryBookListTable.SetFilter("Book Number", GetBooksRelatedToAuthors(MiscTextFilter));
+                    DCLibraryBookListTable.SetRange(Genre);
+                    DCLibraryBookListTable.SetRange("Prequel Name");
+                    DCLibraryBookListTable.SetRange(Title);
+                end;
+
+            DCFilterTextOptionsEnum::Genre:
+                begin
+                    //DCLibraryBookListTable.SetFilter(Genre, DCFindRelatedGenreCode.GetGenreFilterText(MiscTextFilter));
+                    DCLibraryBookListTable.SetFilter(Genre, '@*' + MiscTextFilter + '*');
+                    DCLibraryBookListTable.SetRange("Book Number");
+                    DCLibraryBookListTable.SetRange("Prequel Name");
+                    DCLibraryBookListTable.SetRange(Title);
+                end;
+            DCFilterTextOptionsEnum::"Publisher Name":
+                begin
+                    DCLibraryBookListTable.SetFilter("Prequel Name", '@*' + MiscTextFilter + '*');
+                    DCLibraryBookListTable.SetRange("Book Number");
+                    DCLibraryBookListTable.SetRange(Genre);
+                    DCLibraryBookListTable.SetRange(Title);
+                end;
+            DCFilterTextOptionsEnum::Title:
+                begin
+                    DCLibraryBookListTable.SetFilter(Title, '@*' + MiscTextFilter + '*');
+                    DCLibraryBookListTable.SetRange("Book Number");
+                    DCLibraryBookListTable.SetRange(Genre);
+                    DCLibraryBookListTable.SetRange("Prequel Name");
+                end;
+
+
         end;
 
     end;
