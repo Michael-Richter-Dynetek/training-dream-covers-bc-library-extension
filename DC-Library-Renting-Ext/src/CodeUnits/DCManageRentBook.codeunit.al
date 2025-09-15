@@ -56,11 +56,9 @@ codeunit 50200 "DC Manage Rent Book Code"
     // This function functions
     local procedure RentBook(DCLibraryBookListTable: Record "DC Library Book List Table");
     var
-
         Customer: Record Customer;
         OldCustomerID: Text;
         AllowedToRent: Boolean;
-        //BookNumber: Code[20];
         CustomerRentedBook: Label 'The customer "%1" is now renting the book "%2"';
         BookAlreadyRentedError: Label 'This book is already being rented.';
     begin
@@ -70,8 +68,6 @@ codeunit 50200 "DC Manage Rent Book Code"
             Error(BookAlreadyRentedError);
             exit;
         end;
-
-        //BookNumber := DCLibraryBookListTable."Book Number";
 
         if Page.RunModal(Page::"DC Rent Book Page", DCLibraryBookListTable) = Action::LookupOK then begin
             if (DCLibraryBookListTable."Customer Renting ID" <> '') then begin
@@ -94,7 +90,11 @@ codeunit 50200 "DC Manage Rent Book Code"
 
     end;
 
-
+    
+    /// <summary>
+    /// RentMulitpleBooks.
+    /// </summary>
+    /// <param name="DCLibraryBookListTable">VAR Record "DC Library Book List Table".</param>
     procedure RentMulitpleBooks(var DCLibraryBookListTable: Record "DC Library Book List Table");
     var
         Customer: Record Customer;
@@ -107,7 +107,6 @@ codeunit 50200 "DC Manage Rent Book Code"
     begin
         RentableBooks := true;
         FirstInstance := true;
-
 
         if DCLibraryBookListTable.FindSet() then
             repeat

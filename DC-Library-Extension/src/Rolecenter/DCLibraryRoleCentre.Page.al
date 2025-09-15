@@ -13,6 +13,11 @@ page 50106 "DC Library Role Center"
                 Caption = 'Library Activities';
                 ApplicationArea = All;
             }
+            /*usercontrol(; MyControlAddIn)
+            {
+
+            }*/
+
         }
     }
 
@@ -30,6 +35,10 @@ page 50106 "DC Library Role Center"
 
         }
     }
+
+
+
+
     /*
     actions
     {

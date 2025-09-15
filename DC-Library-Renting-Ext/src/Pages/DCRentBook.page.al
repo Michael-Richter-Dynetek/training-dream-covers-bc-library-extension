@@ -54,6 +54,7 @@ page 50200 "DC Rent Book Page"
                         if Customer."Allowed To Rent" then begin
                             Rec."Customer Renting ID" := Customer."No."; //do not use validate, it gives error because FlowField
                             Rec."Customer Renting Name" := Customer.Name;
+                            Message('working?');
                             Rec.Modify();
                             Customer.Modify();
 

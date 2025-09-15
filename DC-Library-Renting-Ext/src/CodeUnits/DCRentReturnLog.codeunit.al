@@ -20,8 +20,7 @@ codeunit 50206 "DC Rent Return Log Code"
         WeirdError: Label 'No rented log could be found for the rented book "%1"';
         DateTimeReturned: Code[20];
     begin
-        if IsHandled then
-            exit;
+        if IsHandled then exit;
 
         if CreateBaseRentReturnLogLine(DCLibraryBookListTable, DCRentedBooksLogTable, Enum::"DC Rented Returned Enum"::Returned) then begin
             if Today - DCLibraryBookListTable."Date Rented" = 0 then
@@ -31,13 +30,10 @@ codeunit 50206 "DC Rent Return Log Code"
             DCRentedBooksLogTable.Insert(true);
         end;
 
-        //Find book rented log to change
-
         DCRentedBooksLogTable.SetFilter("Book Number", DCLibraryBookListTable."Book Number");
         DCRentedBooksLogTable.SetFilter("Rented/Returned", 'Rented');
         DCRentedBooksLogTable.SetCurrentKey("Log ID");
         DCRentedBooksLogTable.Ascending(false);
-
 
         if DCRentedBooksLogTable.FindSet() then begin
             DCRentedBooksLogTable.FindFirst();
@@ -50,7 +46,6 @@ codeunit 50206 "DC Rent Return Log Code"
         else begin
             Message(WeirdError, DCLibraryBookListTable.Title);
         end;
-        //DCRentedBooksLogTable.SetFilter("Date Rented", ConvertStr(DCLibraryBookListTable."Date Rented"));
     end;
 
 

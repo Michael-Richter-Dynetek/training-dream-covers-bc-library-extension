@@ -1,0 +1,4 @@
+body{
+    /* background-color: chartreuse; */
+    background-image: linear-gradient(chartreuse, yellow, pink, red);
+}
